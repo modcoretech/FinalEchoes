@@ -3,58 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Final Echoes</title>
+    <title>The Final Echoes - Whispers from the Void</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌌</text></svg>">
 </head>
 <body>
-    <div class="background-overlay"></div>
+    <div class="background-nebula"></div>
     <div class="container">
         <header class="site-header">
             <h1>The Final Echoes</h1>
-            <p class="tagline">Whispers of eternity. Words that linger, forever.</p>
-            <div id="connection-status" class="status-message info-message">Connecting to the cosmos...</div>
+            <p class="tagline">Whispers across the cosmic void. One unalterable mark, forever.</p>
+            <div id="connection-status" class="status-message info-message">Establishing cosmic link...</div>
         </header>
 
-        <section id="auth-section" class="card">
-            <h2>Cosmic Passage</h2>
-            <div id="auth-forms" class="form-group">
-                <input type="email" id="email" placeholder="A vessel for your spirit (Email)" autocomplete="username">
-                <input type="password" id="password" placeholder="The key to your realm (Password)" autocomplete="current-password">
-                <div class="button-group">
-                    <button id="signup-btn" class="primary-btn">Engrave My Existence (Sign Up)</button>
-                    <button id="login-btn" class="secondary-btn">Rejoin the Astral Plane (Login)</button>
+        <div id="app-view" style="display:none;">
+            <section id="auth-section" class="card fade-in">
+                <h2>Cosmic Passage</h2>
+                <div id="auth-forms" class="form-group">
+                    <input type="email" id="email" placeholder="Your essence (Email)" autocomplete="username">
+                    <input type="password" id="password" placeholder="The arcane key (Password)" autocomplete="current-password">
+                    <div class="button-group">
+                        <button id="signup-btn" class="primary-btn">Engrave My Existence (Sign Up)</button>
+                        <button id="login-btn" class="secondary-btn">Rejoin the Astral Plane (Login)</button>
+                    </div>
                 </div>
-            </div>
-            <p id="auth-status" class="status-message"></p>
-            <div class="auth-actions" style="display:none;">
-                <p id="logged-in-user-display">Logged in as: <span id="user-email-display"></span></p>
-                <div class="button-group">
-                    <button id="logout-btn" class="secondary-btn">Fade into the Void (Logout)</button>
-                    <button id="delete-account-btn" class="danger-btn">Silence My Own Echo</button>
+                <p id="auth-status" class="status-message"></p>
+                <div class="auth-actions" style="display:none;">
+                    <p id="logged-in-user-display">Currently bound as: <span id="user-email-display"></span></p>
+                    <div class="button-group">
+                        <button id="logout-btn" class="secondary-btn">Fade into the Void (Logout)</button>
+                        <button id="delete-account-btn" class="danger-btn">Silence My Own Echo</button>
+                    </div>
+                    <p class="privacy-note info-message">Deleting your account removes your login, but your eternal echo (note) remains in the archives. Contact support for full data removal.</p>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="note-submission-section" class="card" style="display:none;">
-            <h2>The Unalterable Mark</h2>
-            <textarea id="final-words-input" placeholder="What are the final words your spirit imparts? (Max 500 characters)" rows="10" maxlength="500"></textarea>
-            <p class="char-counter"><span id="char-count">0</span>/500 characters</p>
-            <button id="submit-note-btn" class="primary-btn">Release My Echo</button>
-            <p id="submission-status" class="status-message"></p>
-        </section>
+            <section id="note-submission-section" class="card fade-in" style="display:none;">
+                <h2>The Unalterable Mark</h2>
+                <textarea id="final-words-input" placeholder="What final, eternal words does your spirit impart? (Max 500 characters)" rows="10" maxlength="500"></textarea>
+                <p class="char-counter"><span id="char-count">0</span>/500 characters</p>
+                <button id="submit-note-btn" class="primary-btn">Release My Echo</button>
+                <p id="submission-status" class="status-message"></p>
+            </section>
 
-        <section id="notes-display-section" class="card">
-            <h2>Echoes Across the Cosmos</h2>
-            <div class="notes-actions">
-                <button id="random-note-btn" class="secondary-btn">Glimpse a Fading Whisper</button>
-            </div>
-            <div id="notes-list">
-                <p id="no-notes-message" class="info-message">The cosmic archives are stirring...</p>
+            <section id="notes-display-section" class="card fade-in">
+                <h2>Echoes Across the Cosmos</h2>
+                <div class="notes-actions">
+                    <button id="random-note-btn" class="secondary-btn">Glimpse a Fading Whisper</button>
                 </div>
-            <button id="load-more-btn" class="secondary-btn" style="display:none;">Summon More Echoes</button>
-        </section>
+                <div id="notes-list">
+                    <p id="no-notes-message" class="info-message">The cosmic archives are stirring...</p>
+                    </div>
+                <button id="load-more-btn" class="secondary-btn" style="display:none;">Summon More Echoes</button>
+            </section>
+        </div>
+
+        <div id="single-note-view" style="display:none;">
+            <section class="card fade-in">
+                <h2>An Echo Unearthed</h2>
+                <div id="single-note-content">
+                    <p id="single-note-text"></p>
+                    <div id="single-note-author" class="note-author"></div>
+                </div>
+                <button id="back-to-all-notes-btn" class="secondary-btn">Return to the Chorus of Echoes</button>
+                <p id="single-note-status" class="status-message"></p>
+            </section>
+        </div>
+
+        <div id="cookie-consent-banner" class="cookie-banner" style="display:none;">
+            <p>This cosmic journey uses essential cookies for authentication to ensure your echoes are securely kept. By continuing, you agree to their use.</p>
+            <button id="accept-cookies-btn" class="primary-btn">Accept & Proceed</button>
+        </div>
+
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
