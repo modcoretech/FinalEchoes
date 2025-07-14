@@ -2,13 +2,13 @@
 // IMPORTANT: REPLACE WITH YOUR ACTUAL FIREBASE CONFIG FROM THE CONSOLE
 // KEEP THIS INFORMATION PRIVATE AND DO NOT SHARE IT WIDELY IN PRODUCTION!
 const firebaseConfig = {
-  apiKey: "AIzaSyAY7m8jsU6_fIYsdUl_HEHxTCx7ssop0vo", // Your actual key
-  authDomain: "finalechoesapp.firebaseapp.com",      // Your actual domain
-  projectId: "finalechoesapp",                      // Your actual project ID
+  apiKey: "AIzaSyAY7m9jsU6_fIYsdUl_HEHxTCx7ssop0vo",
+  authDomain: "finalechoesapp.firebaseapp.com",
+  projectId: "finalechoesapp",
   storageBucket: "finalechoesapp.firebasestorage.app",
   messagingSenderId: "111535498051",
   appId: "1:111535498051:web:3ea8094fd86160f32145f6",
-  measurementId: "G-5L31R9C56D" // Only if you enabled Analytics
+  measurementId: "G-5L31R9C56D"
 };
 
 // Initialize Firebase App
