@@ -187,7 +187,7 @@ function formatNoteDetails(mood, origin) {
 signupBtn.addEventListener('click', async () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
-    const recaptchaResponse = grecaptcha.getResponse(); // Get reCAPTCHA response
+    // REMOVED: const recaptchaResponse = grecaptcha.getResponse(); // Get reCAPTCHA response
 
     if (!email || !password) {
         updateStatus(authStatus, 'Your essence (email) and arcane key (password) are vital. They cannot be empty.', 'error');
@@ -197,21 +197,21 @@ signupBtn.addEventListener('click', async () => {
         updateStatus(authStatus, 'The arcane key (password) must be at least 6 characters long to secure your passage.', 'error');
         return;
     }
-    if (!recaptchaResponse) {
-        updateStatus(authStatus, 'Please verify you are not a cosmic automaton by completing the reCAPTCHA.', 'error');
-        return;
-    }
+    // REMOVED: if (!recaptchaResponse) {
+    // REMOVED:     updateStatus(authStatus, 'Please verify you are not a cosmic automaton by completing the reCAPTCHA.', 'error');
+    // REMOVED:     return;
+    // REMOVED: }
 
     try {
         updateStatus(authStatus, 'Engraving your existence in the cosmic ledger...', 'info');
-        // In a real app, you'd send recaptchaResponse to a Cloud Function for server-side verification.
-        // For client-side only demo, we'll proceed assuming valid reCAPTCHA.
+        // REMOVED: In a real app, you'd send recaptchaResponse to a Cloud Function for server-side verification.
+        // REMOVED: For client-side only demo, we'll proceed assuming valid reCAPTCHA.
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         await userCredential.user.sendEmailVerification(); // Send verification email
         updateStatus(authStatus, 'Existence engraved! A verification link has been sent to your email. Please verify to fully awaken.', 'success');
         emailInput.value = ''; // Clear inputs on success
         passwordInput.value = '';
-        grecaptcha.reset(); // Reset reCAPTCHA
+        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA
     } catch (error) {
         let errorMessage = 'Failed to engrave your existence.';
         if (error.code === 'auth/email-already-in-use') {
@@ -227,23 +227,23 @@ signupBtn.addEventListener('click', async () => {
         }
         updateStatus(authStatus, `${errorMessage} Error: ${error.message}`, 'error');
         console.error("Sign up error:", error);
-        grecaptcha.reset(); // Reset reCAPTCHA on error
+        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA on error
     }
 });
 
 loginBtn.addEventListener('click', async () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
-    const recaptchaResponse = grecaptcha.getResponse();
+    // REMOVED: const recaptchaResponse = grecaptcha.getResponse();
 
     if (!email || !password) {
         updateStatus(authStatus, 'Provide your essence and arcane key to re-enter the astral plane.', 'error');
         return;
     }
-    if (!recaptchaResponse) {
-        updateStatus(authStatus, 'Please verify you are not a cosmic automaton by completing the reCAPTCHA.', 'error');
-        return;
-    }
+    // REMOVED: if (!recaptchaResponse) {
+    // REMOVED:     updateStatus(authStatus, 'Please verify you are not a cosmic automaton by completing the reCAPTCHA.', 'error');
+    // REMOVED:     return;
+    // REMOVED: }
 
     try {
         updateStatus(authStatus, 'Rejoining the astral plane...', 'info');
@@ -251,7 +251,7 @@ loginBtn.addEventListener('click', async () => {
         updateStatus(authStatus, 'Astral plane rejoined! Your echo awaits your command.', 'success');
         emailInput.value = ''; // Clear inputs on success
         passwordInput.value = '';
-        grecaptcha.reset(); // Reset reCAPTCHA
+        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA
     } catch (error) {
         let errorMessage = 'Failed to rejoin the astral plane.';
         if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -267,7 +267,7 @@ loginBtn.addEventListener('click', async () => {
         }
         updateStatus(authStatus, `${errorMessage} Error: ${error.message}`, 'error');
         console.error("Login error:", error);
-        grecaptcha.reset(); // Reset reCAPTCHA on error
+        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA on error
     }
 });
 
