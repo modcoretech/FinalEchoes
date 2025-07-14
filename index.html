@@ -5,76 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Final Echoes - Whispers from the Void</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Spectral:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌌</text></svg>">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="background-nebula"></div>
-    <div class="container">
-        <header class="site-header">
+    <div class="container" role="main">
+        <header class="site-header" role="banner">
             <h1>The Final Echoes</h1>
             <p class="tagline">Whispers across the cosmic void. One unalterable mark, forever.</p>
-            <div id="connection-status" class="status-message info-message">Establishing cosmic link...</div>
+            <div id="connection-status" class="status-message info-message" aria-live="polite">Establishing cosmic link...</div>
+            <nav class="main-nav" aria-label="Main Navigation">
+                <button id="home-btn" class="nav-btn secondary-btn" aria-label="Return to All Echoes">
+                    Home / All Echoes
+                </button>
+            </nav>
         </header>
 
+        <div id="age-verification-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="age-modal-title" style="display:none;">
+            <div class="modal-content">
+                <h2 id="age-modal-title">Enter the Cosmic Archives</h2>
+                <p>To ensure compliance with intergalactic data protocols (like GDPR), please confirm your age.</p>
+                <p>By proceeding, you affirm that you are **16 years or older** and accept the <a href="#privacy-info" class="link-style" aria-label="Read our Privacy Information">privacy information</a> below regarding your single, unalterable echo.</p>
+                <div class="button-group">
+                    <button id="age-confirm-btn" class="primary-btn">I Am 16+ / Accept</button>
+                </div>
+            </div>
+        </div>
+
         <div id="app-view" style="display:none;">
-            <section id="auth-section" class="card fade-in">
-                <h2>Cosmic Passage</h2>
+            <section id="auth-section" class="card fade-in" aria-labelledby="auth-heading">
+                <h2 id="auth-heading">Cosmic Passage</h2>
                 <div id="auth-forms" class="form-group">
-                    <input type="email" id="email" placeholder="Your essence (Email)" autocomplete="username">
-                    <input type="password" id="password" placeholder="The arcane key (Password)" autocomplete="current-password">
-                    <div class="button-group">
-                        <button id="signup-btn" class="primary-btn">Engrave My Existence (Sign Up)</button>
-                        <button id="login-btn" class="secondary-btn">Rejoin the Astral Plane (Login)</button>
+                    <input type="email" id="email" placeholder="Your essence (Email)" autocomplete="username" aria-label="Email for authentication">
+                    <input type="password" id="password" placeholder="The arcane key (Password)" autocomplete="current-password" aria-label="Password for authentication">
+                    <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" data-theme="dark"></div> <div class="button-group">
+                        <button id="signup-btn" class="primary-btn" aria-label="Sign Up and Engrave Existence">Engrave My Existence (Sign Up)</button>
+                        <button id="login-btn" class="secondary-btn" aria-label="Login and Rejoin Astral Plane">Rejoin the Astral Plane (Login)</button>
                     </div>
+                    <button id="reset-password-btn" class="link-style" aria-label="Reset Password">Forgot your arcane key?</button>
                 </div>
-                <p id="auth-status" class="status-message"></p>
+                <p id="auth-status" class="status-message" aria-live="polite"></p>
                 <div class="auth-actions" style="display:none;">
-                    <p id="logged-in-user-display">Currently bound as: <span id="user-email-display"></span></p>
+                    <p id="logged-in-user-display" aria-live="polite">Currently bound as: <span id="user-email-display"></span></p>
                     <div class="button-group">
-                        <button id="logout-btn" class="secondary-btn">Fade into the Void (Logout)</button>
-                        <button id="delete-account-btn" class="danger-btn">Silence My Own Echo</button>
+                        <button id="logout-btn" class="secondary-btn" aria-label="Logout and Fade into the Void">Fade into the Void (Logout)</button>
+                        <button id="delete-account-btn" class="danger-btn" aria-label="Delete Account and Silence Own Echo">Silence My Own Echo</button>
                     </div>
-                    <p class="privacy-note info-message">Deleting your account removes your login, but your eternal echo (note) remains in the archives. Contact support for full data removal.</p>
+                    <button id="export-data-btn" class="secondary-btn" aria-label="Export My Echo and Account Data">Download My Echo & Data</button>
+                    <p class="privacy-note info-message" role="note">Deleting your account severs your direct connection, but your eternal echo (note) remains in the archives as a testament to your spirit. Contact cosmic administrators for full data removal.</p>
                 </div>
             </section>
 
-            <section id="note-submission-section" class="card fade-in" style="display:none;">
-                <h2>The Unalterable Mark</h2>
-                <textarea id="final-words-input" placeholder="What final, eternal words does your spirit impart? (Max 500 characters)" rows="10" maxlength="500"></textarea>
+            <section id="note-submission-section" class="card fade-in" aria-labelledby="note-submission-heading" style="display:none;">
+                <h2 id="note-submission-heading">The Unalterable Mark</h2>
+                <p class="info-message">Once released, your words become a permanent echo in the cosmos. This act can only be performed once per traveler.</p>
+                <p class="status-message warning-message" id="email-verification-message" style="display:none;">
+                    Your cosmic vessel (email) needs validation. A verification link has been dispatched to your email address. Please verify to release your echo.
+                </p>
+                <textarea id="final-words-input" placeholder="What final, eternal words does your spirit impart? (Max 500 characters)" rows="10" maxlength="500" aria-label="Enter your final words here"></textarea>
                 <p class="char-counter"><span id="char-count">0</span>/500 characters</p>
-                <button id="submit-note-btn" class="primary-btn">Release My Echo</button>
-                <p id="submission-status" class="status-message"></p>
+
+                <div class="form-group-inline">
+                    <label for="mood-select" class="sr-only">Select the mood of your echo</label>
+                    <select id="mood-select" aria-label="Select the mood of your echo">
+                        <option value="">— Choose Echo's Mood —</option>
+                        <option value="Serene">Serene</option>
+                        <option value="Turbulent">Turbulent</option>
+                        <option value="Resigned">Resigned</option>
+                        <option value="Hopeful">Hopeful</option>
+                        <option value="Mysterious">Mysterious</option>
+                        <option value="Reflective">Reflective</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+
+                    <label for="origin-select" class="sr-only">Select the origin of your echo</label>
+                    <select id="origin-select" aria-label="Select the origin of your echo">
+                        <option value="">— Choose Echo's Origin —</option>
+                        <option value="Depths of Memory">Depths of Memory</option>
+                        <option value="Fleeting Thought">Fleeting Thought</option>
+                        <option value="Distant Star">Distant Star</option>
+                        <option value="Fading Dream">Fading Dream</option>
+                        <option value="Silent Whisper">Silent Whisper</option>
+                        <option value="Void's Embrace">Void's Embrace</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="permanent-echo-consent" aria-required="true" aria-label="I understand and agree that my echo will be permanent and unchangeable.">
+                    <label for="permanent-echo-consent">I understand and agree that my echo will be permanent and unchangeable.</label>
+                </div>
+
+                <button id="submit-note-btn" class="primary-btn" aria-label="Release My Echo">Release My Echo</button>
+                <p id="submission-status" class="status-message" aria-live="polite"></p>
             </section>
 
-            <section id="notes-display-section" class="card fade-in">
-                <h2>Echoes Across the Cosmos</h2>
+            <section id="notes-display-section" class="card fade-in" aria-labelledby="notes-display-heading">
+                <h2 id="notes-display-heading">Echoes Across the Cosmos</h2>
                 <div class="notes-actions">
-                    <button id="random-note-btn" class="secondary-btn">Glimpse a Fading Whisper</button>
+                    <button id="random-note-btn" class="secondary-btn" aria-label="Glimpse a Fading Whisper">Glimpse a Fading Whisper</button>
+                    <button id="random-journey-btn" class="secondary-btn" aria-label="Begin a Random Echo Journey">Begin a Random Echo Journey</button>
                 </div>
-                <div id="notes-list">
-                    <p id="no-notes-message" class="info-message">The cosmic archives are stirring...</p>
+                <div id="notes-list" aria-live="polite">
+                    <p id="no-notes-message" class="info-message">The cosmic archives are stirring, summoning echoes...</p>
                     </div>
-                <button id="load-more-btn" class="secondary-btn" style="display:none;">Summon More Echoes</button>
+                <button id="load-more-btn" class="secondary-btn" style="display:none;" aria-label="Summon More Echoes">Summon More Echoes</button>
             </section>
         </div>
 
         <div id="single-note-view" style="display:none;">
-            <section class="card fade-in">
-                <h2>An Echo Unearthed</h2>
+            <section class="card fade-in" aria-labelledby="single-note-heading">
+                <h2 id="single-note-heading">An Echo Unearthed</h2>
                 <div id="single-note-content">
-                    <p id="single-note-text"></p>
+                    <p id="single-note-text" aria-live="polite"></p>
+                    <div id="single-note-details" class="note-details"></div>
                     <div id="single-note-author" class="note-author"></div>
                 </div>
-                <button id="back-to-all-notes-btn" class="secondary-btn">Return to the Chorus of Echoes</button>
-                <p id="single-note-status" class="status-message"></p>
+                <button id="back-to-all-notes-btn" class="secondary-btn" aria-label="Return to the Chorus of Echoes">Return to the Chorus of Echoes</button>
+                <p id="single-note-status" class="status-message" aria-live="polite"></p>
             </section>
         </div>
 
-        <div id="cookie-consent-banner" class="cookie-banner" style="display:none;">
-            <p>This cosmic journey uses essential cookies for authentication to ensure your echoes are securely kept. By continuing, you agree to their use.</p>
-            <button id="accept-cookies-btn" class="primary-btn">Accept & Proceed</button>
+        <div id="cookie-consent-banner" class="cookie-banner" role="complementary" aria-live="assertive" style="display:none;">
+            <p>This cosmic journey uses essential cookies for authentication to ensure your echoes are securely kept. By continuing, you affirm your acceptance of their use and our <a href="#privacy-info" class="link-style" aria-label="Read our Privacy Information">privacy information</a>.</p>
+            <button id="accept-cookies-btn" class="primary-btn" aria-label="Accept Cookies and Proceed">Accept & Proceed</button>
         </div>
+
+        <footer id="privacy-info" class="card privacy-section fade-in" role="contentinfo">
+            <h2>Cosmic Data Protocols (Privacy & Security)</h2>
+            <p>At The Final Echoes, we are committed to safeguarding your journey through the cosmos. Your privacy is paramount.</p>
+
+            <h3>What Data We Collect:</h3>
+            <ul>
+                <li>**Authentication Data:** We collect your email address and a securely hashed password to create and manage your unique account (your "cosmic vessel"). This allows you to submit your singular echo.</li>
+                <li>**Your Echo (Note):** The text you submit as your "final words."</li>
+                <li>**Metadata:** A server-generated timestamp, an anonymized version of your email for display, and optional mood/origin tags you choose.</li>
+            </ul>
+
+            <h3>How We Use Your Data:</h3>
+            <ul>
+                <li>To authenticate your identity and secure your submission.</li>
+                <li>To display your "final words" publicly within the "Echoes Across the Cosmos" archive.</li>
+                <li>To facilitate features like "Download My Echo & Data" for your right to access.</li>
+            </ul>
+
+            <h3>Your Rights (GDPR Compliant):</h3>
+            <ul>
+                <li>**Right to Access/Portability:** You can <button type="button" class="link-style" onclick="document.getElementById('export-data-btn').click();">download your echo and account data</button> at any time from your account management section.</li>
+                <li>**Right to Rectification:** Your submitted echo is a permanent, unalterable mark. Due to its nature as a "final word," it cannot be changed once released. Your authentication email can be updated through Firebase directly if needed.</li>
+                <li>**Right to Erasure ("Right to be Forgotten"):** You can "Silence Your Own Echo" by deleting your account. This removes your login credentials. However, your public echo (the note itself) remains enshrined in the archives as an unalterable testament. For complete data removal of your echo from the public archives, please contact the cosmic administrators at [Your Contact Email/Method Here].</li>
+                <li>**Right to Restrict Processing & Object:** Given the simple, public nature of the echo, processing is minimal. If you object, your remedy is to delete your account.</li>
+            </ul>
+
+            <h3>Security Measures:</h3>
+            <ul>
+                <li>We utilize Firebase Authentication for robust user management, including industry-standard password hashing and protection against brute-force attacks.</li>
+                <li>Google reCAPTCHA is employed during registration/login to deter automated bot activity.</li>
+                <li>Your submitted echo is sanitized using DOMPurify to prevent malicious code injection (XSS attacks).</li>
+                <li>Firestore Security Rules strictly control data access and ensure the "one-time, unalterable" nature of your echo.</li>
+            </ul>
+
+            <p class="legal-note">By using this service, you acknowledge and agree to these terms. Data is processed in accordance with the laws of [Your Jurisdiction, e.g., Germany / European Union].</p>
+        </footer>
 
     </div>
 
