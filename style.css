@@ -1,199 +1,301 @@
+:root {
+    --color-background-dark: #1a1a2e;
+    --color-background-light: #2a2a4a;
+    --color-card-background: #16213e;
+    --color-text-primary: #e0e0e0;
+    --color-text-secondary: #a0a0a0;
+    --color-accent-primary: #0f3460;
+    --color-accent-secondary: #533483;
+    --color-border: #001f3f;
+    --color-button-primary: #e94560;
+    --color-button-secondary: #2c528f; /* Darker blue for contrast */
+    --color-button-danger: #d62839;
+    --color-success: #4CAF50;
+    --color-error: #FF5252;
+    --color-info: #2196F3;
+    --color-warning: #FFC107;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: var(--color-background-dark);
+    color: var(--color-text-primary);
     margin: 0;
     padding: 20px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
+    box-sizing: border-box;
+    overflow-y: scroll; /* Allow scrolling for content */
+    position: relative;
+}
+
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top left, var(--color-background-light) 0%, transparent 40%),
+                radial-gradient(circle at bottom right, var(--color-background-light) 0%, transparent 40%);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: -1;
 }
 
 .container {
-    background-color: #fff;
+    background-color: var(--color-card-background);
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     box-sizing: border-box;
-    margin-top: 20px;
+    margin: 20px auto;
+    border: 1px solid var(--color-border);
+    position: relative; /* For z-index if needed */
+}
+
+.site-header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1; /* Ensure header is above overlay */
 }
 
 h1 {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 5px;
-    font-size: 2.5em;
+    color: var(--color-text-primary);
+    font-size: 3.5em;
+    text-shadow: 0 0 15px var(--color-accent-primary);
+    margin-bottom: 10px;
 }
 
 .tagline {
-    text-align: center;
-    color: #7f8c8d;
+    color: var(--color-text-secondary);
     font-style: italic;
-    margin-bottom: 30px;
+    font-size: 1.1em;
+    margin-top: 0;
 }
 
 h2 {
-    color: #34495e;
+    color: var(--color-text-primary);
     text-align: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-#auth-section, #note-submission-section, #notes-display-section {
-    border: 1px solid #e0e0e0;
-    padding: 20px;
-    border-radius: 6px;
     margin-bottom: 25px;
-    background-color: #fdfdfd;
+    border-bottom: 1px dashed var(--color-border);
+    padding-bottom: 15px;
+    font-size: 1.8em;
+    text-shadow: 0 0 8px rgba(var(--color-accent-secondary), 0.5);
 }
 
-#auth-forms, .auth-actions, .notes-actions {
+.card {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background-light);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 10px; /* Space between elements */
-    justify-content: center;
-    margin-top: 15px;
+    flex-direction: column;
+    gap: 15px;
 }
 
 input[type="email"],
 input[type="password"],
 textarea {
-    flex-grow: 1; /* Allows inputs to take available space */
-    max-width: calc(100% - 20px); /* Adjust max-width as needed */
-    padding: 12px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    width: 100%;
+    padding: 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    background-color: var(--color-background-dark);
+    color: var(--color-text-primary);
     font-size: 1rem;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
 }
 
 input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-    border-color: #3498db;
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 10px rgba(var(--color-accent-primary), 0.5);
     outline: none;
 }
 
 textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 150px;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.9em;
+    color: var(--color-text-secondary);
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
 }
 
 button {
-    background-color: #3498db;
-    color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    white-space: nowrap; /* Prevent button text from wrapping */
+    font-size: 1.05em;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
 }
 
-button:hover {
-    background-color: #2980b9;
-    transform: translateY(-1px);
+.primary-btn {
+    background-color: var(--color-button-primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(var(--color-button-primary), 0.4);
 }
 
-button:active {
-    transform: translateY(0);
+.primary-btn:hover {
+    background-color: darken(var(--color-button-primary), 10%); /* This won't work in pure CSS, need JS or specific color */
+    background-color: #d83e58; /* Manual darken for example */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(var(--color-button-primary), 0.5);
 }
 
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+.secondary-btn {
+    background-color: var(--color-button-secondary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(var(--color-button-secondary), 0.3);
 }
 
-.danger-btn { /* For delete account button */
-    background-color: #e74c3c;
+.secondary-btn:hover {
+    background-color: #244177; /* Manual darken for example */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(var(--color-button-secondary), 0.4);
+}
+
+.danger-btn {
+    background-color: var(--color-button-danger);
+    color: white;
+    box-shadow: 0 4px 10px rgba(var(--color-button-danger), 0.4);
 }
 
 .danger-btn:hover {
-    background-color: #c0392b;
+    background-color: #b9202f; /* Manual darken for example */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(var(--color-button-danger), 0.5);
 }
 
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
 
-#auth-status, #submission-status {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 0.95rem;
+.status-message {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.95em;
     text-align: center;
     font-weight: bold;
+    border: 1px solid transparent; /* Default transparent border */
 }
 
-.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+.success-message {
+    background-color: rgba(var(--color-success), 0.2);
+    color: var(--color-success);
+    border-color: var(--color-success);
 }
 
-.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+.error-message {
+    background-color: rgba(var(--color-error), 0.2);
+    color: var(--color-error);
+    border-color: var(--color-error);
 }
 
-.info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
+.info-message {
+    background-color: rgba(var(--color-info), 0.2);
+    color: var(--color-info);
+    border-color: var(--color-info);
+}
+
+.warning-message {
+    background-color: rgba(var(--color-warning), 0.2);
+    color: var(--color-warning);
+    border-color: var(--color-warning);
 }
 
 .note-item {
-    background-color: #ecf0f1;
-    border: 1px solid #bdc3c7;
+    background-color: var(--color-background-dark);
+    border: 1px solid var(--color-border);
     padding: 20px;
-    margin-bottom: 15px;
-    border-radius: 8px;
+    margin-bottom: 20px;
+    border-radius: 10px;
     word-wrap: break-word;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    line-height: 1.6;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    line-height: 1.7;
+    font-size: 1.1em;
 }
 
 .note-author {
-    font-size: 0.85rem;
-    color: #7f8c8d;
+    font-size: 0.85em;
+    color: var(--color-text-secondary);
     margin-top: 15px;
     text-align: right;
     font-style: italic;
+    border-top: 1px dashed var(--color-border);
+    padding-top: 10px;
 }
 
-#char-count {
-    font-size: 0.9rem;
-    color: #666;
-    text-align: right;
-    display: block; /* Ensure it takes full width */
-    margin-bottom: 5px;
+#no-notes-message {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.notes-actions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    gap: 15px;
 }
 
 #load-more-btn {
-    display: block; /* Make it a block element */
+    display: block;
     width: fit-content;
-    margin: 20px auto 0; /* Center the button */
+    margin: 20px auto 0;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .container {
         padding: 20px;
+        margin: 10px auto;
     }
-    #auth-forms, .auth-actions, .notes-actions {
+    h1 {
+        font-size: 2.8em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    .button-group {
         flex-direction: column;
         align-items: stretch;
     }
-    input[type="email"],
-    input[type="password"],
-    textarea,
     button {
         width: 100%;
-        max-width: 100%;
-        margin-right: 0;
+    }
+    input[type="email"],
+    input[type="password"],
+    textarea {
+        padding: 12px;
     }
 }
