@@ -2,13 +2,13 @@
 // IMPORTANT: REPLACE WITH YOUR ACTUAL FIREBASE CONFIG FROM THE CONSOLE
 // KEEP THIS INFORMATION PRIVATE AND DO NOT SHARE IT WIDELY IN PRODUCTION!
 const firebaseConfig = {
-  apiKey: "AIzaSyAY7m9jsU6_fIYsdUl_HEHxTCx7ssop0vo",
-  authDomain: "finalechoesapp.firebaseapp.com",
-  projectId: "finalechoesapp",
+  apiKey: "AIzaSyAY7m8jsU6_fIYsdUl_HEHxTCx7ssop0vo", // Your actual key
+  authDomain: "finalechoesapp.firebaseapp.com",      // Your actual domain
+  projectId: "finalechoesapp",                      // Your actual project ID
   storageBucket: "finalechoesapp.firebasestorage.app",
   messagingSenderId: "111535498051",
   appId: "1:111535498051:web:3ea8094fd86160f32145f6",
-  measurementId: "G-5L31R9C56D"
+  measurementId: "G-5L31R9C56D" // Only if you enabled Analytics
 };
 
 // Initialize Firebase App
@@ -16,8 +16,7 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// --- Firestore Offline Persistence (Addressing Deprecation Warning) ---
-// Using the new `cache` property in Firestore settings.
+// --- Firestore Persistence (FIXED: Using FirestoreSettings.cache) ---
 db.settings({
     cache: {
         cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
@@ -26,7 +25,7 @@ db.settings({
 
 db.enablePersistence()
   .then(() => {
-    console.log("Firestore persistence enabled successfully using new cache settings.");
+    console.log("Firestore persistence enabled successfully using FirestoreSettings.cache.");
     updateConnectionStatus("Cosmic link established. Archives are accessible.", "success");
   })
   .catch((err) => {
@@ -44,11 +43,21 @@ db.enablePersistence()
 
 
 // --- 2. DOM Elements ---
-// Views
-const appView = document.getElementById('app-view');
-const singleNoteView = document.getElementById('single-note-view');
-const homeBtn = document.getElementById('home-btn'); // New Home/All Echoes button
-const backToAllNotesBtn = document.getElementById('back-to-all-notes-btn');
+// Main Container
+const appContainer = document.getElementById('app-container');
+
+// Navigation Buttons
+const navProfileBtn = document.getElementById('nav-profile');
+const navMyEchoBtn = document.getElementById('nav-my-echo');
+const navAllEchoesBtn = document.getElementById('nav-all-echoes');
+const navButtons = [navProfileBtn, navMyEchoBtn, navAllEchoesBtn];
+
+// Content Sections (corresponding to navigation)
+const profileSection = document.getElementById('profile-section');
+const noteSubmissionSection = document.getElementById('note-submission-section'); // Renamed for consistency with nav
+const notesDisplaySection = document.getElementById('notes-display-section');
+const singleNoteView = document.getElementById('single-note-view'); // Still exists for individual note display
+const contentSections = [profileSection, noteSubmissionSection, notesDisplaySection, singleNoteView];
 
 // Header & Status
 const connectionStatusElement = document.getElementById('connection-status');
@@ -62,38 +71,37 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const signupBtn = document.getElementById('signup-btn');
 const loginBtn = document.getElementById('login-btn');
-const resetPasswordBtn = document.getElementById('reset-password-btn'); // New
+const resetPasswordBtn = document.getElementById('reset-password-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const deleteAccountBtn = document.getElementById('delete-account-btn');
-const exportDataBtn = document.getElementById('export-data-btn'); // New
+const exportDataBtn = document.getElementById('export-data-btn');
 const authStatus = document.getElementById('auth-status');
 const authForms = document.getElementById('auth-forms');
 const authActions = document.querySelector('.auth-actions');
 const userEmailDisplay = document.getElementById('user-email-display');
 
-// Note Submission Section
-const noteSubmissionSection = document.getElementById('note-submission-section');
-const emailVerificationMessage = document.getElementById('email-verification-message'); // New
+// Note Submission Section (My Echo)
 const finalWordsInput = document.getElementById('final-words-input');
 const charCountSpan = document.getElementById('char-count');
-const moodSelect = document.getElementById('mood-select'); // New
-const originSelect = document.getElementById('origin-select'); // New
-const permanentEchoConsent = document.getElementById('permanent-echo-consent'); // New
+const moodSelect = document.getElementById('mood-select');
+const originSelect = document.getElementById('origin-select');
+const permanentEchoConsent = document.getElementById('permanent-echo-consent');
 const submitNoteBtn = document.getElementById('submit-note-btn');
 const submissionStatus = document.getElementById('submission-status');
 
-// Notes Display Section
+// Notes Display Section (Cosmic Echoes)
 const notesList = document.getElementById('notes-list');
 const noNotesMessage = document.getElementById('no-notes-message');
 const loadMoreBtn = document.getElementById('load-more-btn');
 const randomNoteBtn = document.getElementById('random-note-btn');
-const randomJourneyBtn = document.getElementById('random-journey-btn'); // New
+const randomJourneyBtn = document.getElementById('random-journey-btn');
 
-// Single Note Display
+// Single Note Display (within Cosmic Echoes)
 const singleNoteText = document.getElementById('single-note-text');
-const singleNoteDetails = document.getElementById('single-note-details'); // New for mood/origin
+const singleNoteDetails = document.getElementById('single-note-details');
 const singleNoteAuthor = document.getElementById('single-note-author');
 const singleNoteStatus = document.getElementById('single-note-status');
+const backToAllNotesBtn = document.getElementById('back-to-all-notes-btn');
 
 // Cookie Consent
 const cookieConsentBanner = document.getElementById('cookie-consent-banner');
@@ -105,6 +113,7 @@ const NOTES_PER_LOAD = 8; // How many echoes to summon at a time
 const COOKIE_CONSENT_KEY = 'finalEchoes_cookie_consent';
 const AGE_VERIFICATION_KEY = 'finalEchoes_age_verified';
 let randomJourneyInterval = null; // For the continuous random note display
+let currentUserNoteSnapshot = null; // Store the current user's note snapshot
 
 // --- 4. Utility Functions ---
 
@@ -116,13 +125,14 @@ let randomJourneyInterval = null; // For the continuous random note display
  */
 function updateStatus(element, message, type) {
     element.textContent = message;
-    element.className = `status-message ${type}-message`;
+    // Clear previous classes and add the new one
+    element.className = `status-message text-sm p-3 rounded-md mb-6 ${type}-message`;
     element.setAttribute('role', type === 'error' ? 'alert' : 'status'); // Accessibility
     // Clear message after a few seconds for success/info messages
     if (type === 'success' || type === 'info') {
         setTimeout(() => {
             element.textContent = '';
-            element.className = 'status-message'; // Clear class too
+            element.className = 'status-message text-sm p-3 rounded-md mb-6'; // Clear class too
             element.removeAttribute('role');
         }, 6000); // Increased timeout for reading
     }
@@ -135,6 +145,12 @@ function updateStatus(element, message, type) {
  */
 function updateConnectionStatus(message, type) {
     updateStatus(connectionStatusElement, message, type);
+    // Remove margin bottom for connection status if it's not currently showing a message
+    if (message === '') {
+        connectionStatusElement.classList.remove('mb-6');
+    } else {
+        connectionStatusElement.classList.add('mb-6');
+    }
 }
 
 /**
@@ -182,12 +198,39 @@ function formatNoteDetails(mood, origin) {
     return details.length > 0 ? `<p>${details.join(' | ')}</p>` : '';
 }
 
+/**
+ * Shows a specific content section and hides others.
+ * @param {HTMLElement} sectionToShow
+ * @param {HTMLElement} activeNavBtn
+ */
+function showSection(sectionToShow, activeNavBtn = null) {
+    contentSections.forEach(section => {
+        section.style.display = 'none';
+        section.classList.remove('fade-in'); // Remove animation class before hiding
+    });
+    navButtons.forEach(btn => btn.classList.remove('active', 'bg-teal-600', 'text-white')); // Remove active state from all nav buttons
+    navButtons.forEach(btn => btn.classList.add('bg-gray-700', 'text-teal-300')); // Reset to default inactive styles
+
+    sectionToShow.style.display = 'block';
+    sectionToShow.classList.add('fade-in'); // Add fade-in animation
+
+    if (activeNavBtn) {
+        activeNavBtn.classList.add('active', 'bg-teal-600', 'text-white'); // Add active state to the clicked button
+        activeNavBtn.classList.remove('bg-gray-700', 'text-teal-300'); // Remove default inactive styles
+    }
+
+    // Special handling for single note view within notes-display-section
+    if (sectionToShow === singleNoteView) {
+        notesDisplaySection.style.display = 'block'; // Keep parent visible
+        notesDisplaySection.classList.remove('fade-in'); // Don't animate parent twice
+    }
+}
+
 // --- 5. Authentication Functions ---
 
 signupBtn.addEventListener('click', async () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
-    // REMOVED: const recaptchaResponse = grecaptcha.getResponse(); // Get reCAPTCHA response
 
     if (!email || !password) {
         updateStatus(authStatus, 'Your essence (email) and arcane key (password) are vital. They cannot be empty.', 'error');
@@ -197,21 +240,14 @@ signupBtn.addEventListener('click', async () => {
         updateStatus(authStatus, 'The arcane key (password) must be at least 6 characters long to secure your passage.', 'error');
         return;
     }
-    // REMOVED: if (!recaptchaResponse) {
-    // REMOVED:     updateStatus(authStatus, 'Please verify you are not a cosmic automaton by completing the reCAPTCHA.', 'error');
-    // REMOVED:     return;
-    // REMOVED: }
 
     try {
         updateStatus(authStatus, 'Engraving your existence in the cosmic ledger...', 'info');
-        // REMOVED: In a real app, you'd send recaptchaResponse to a Cloud Function for server-side verification.
-        // REMOVED: For client-side only demo, we'll proceed assuming valid reCAPTCHA.
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        await userCredential.user.sendEmailVerification(); // Send verification email
-        updateStatus(authStatus, 'Existence engraved! A verification link has been sent to your email. Please verify to fully awaken.', 'success');
+        // REMOVED: await userCredential.user.sendEmailVerification(); // No longer sending verification email
+        updateStatus(authStatus, 'Existence engraved! You are now bound to the cosmos.', 'success');
         emailInput.value = ''; // Clear inputs on success
         passwordInput.value = '';
-        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA
     } catch (error) {
         let errorMessage = 'Failed to engrave your existence.';
         if (error.code === 'auth/email-already-in-use') {
@@ -227,23 +263,17 @@ signupBtn.addEventListener('click', async () => {
         }
         updateStatus(authStatus, `${errorMessage} Error: ${error.message}`, 'error');
         console.error("Sign up error:", error);
-        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA on error
     }
 });
 
 loginBtn.addEventListener('click', async () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
-    // REMOVED: const recaptchaResponse = grecaptcha.getResponse();
 
     if (!email || !password) {
         updateStatus(authStatus, 'Provide your essence and arcane key to re-enter the astral plane.', 'error');
         return;
     }
-    // REMOVED: if (!recaptchaResponse) {
-    // REMOVED:     updateStatus(authStatus, 'Please verify you are not a cosmic automaton by completing the reCAPTCHA.', 'error');
-    // REMOVED:     return;
-    // REMOVED: }
 
     try {
         updateStatus(authStatus, 'Rejoining the astral plane...', 'info');
@@ -251,7 +281,6 @@ loginBtn.addEventListener('click', async () => {
         updateStatus(authStatus, 'Astral plane rejoined! Your echo awaits your command.', 'success');
         emailInput.value = ''; // Clear inputs on success
         passwordInput.value = '';
-        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA
     } catch (error) {
         let errorMessage = 'Failed to rejoin the astral plane.';
         if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -267,7 +296,6 @@ loginBtn.addEventListener('click', async () => {
         }
         updateStatus(authStatus, `${errorMessage} Error: ${error.message}`, 'error');
         console.error("Login error:", error);
-        // REMOVED: grecaptcha.reset(); // Reset reCAPTCHA on error
     }
 });
 
@@ -301,6 +329,8 @@ logoutBtn.addEventListener('click', async () => {
         updateStatus(authStatus, 'Fading from the cosmic connection...', 'info');
         await auth.signOut();
         updateStatus(authStatus, 'You have left the echoes behind.', 'success');
+        // After logout, show profile section by default
+        showSection(profileSection, navProfileBtn);
     } catch (error) {
         updateStatus(authStatus, `Failed to fade: ${error.message}. Try again.`, 'error');
         console.error("Logout error:", error);
@@ -321,14 +351,10 @@ deleteAccountBtn.addEventListener('click', async () => {
 
     updateStatus(authStatus, 'Initiating the silencing ritual...', 'info');
     try {
-        // Firebase requires recent re-authentication for sensitive operations.
-        // If this fails due to 'auth/requires-recent-login', user needs to re-authenticate.
         await user.delete();
         updateStatus(authStatus, 'Your account has been silenced. Your echo remains in the archives.', 'success');
-        // Note: The 'finalWords' document in Firestore associated with this UID will persist,
-        // fulfilling the theme's idea of "final words" even if the account is gone.
-        // If you intended to delete the note as well, you would add:
-        // await db.collection('finalWords').doc(user.uid).delete();
+        // After deletion, show profile section by default
+        showSection(profileSection, navProfileBtn);
     } catch (error) {
         let errorMessage = 'Failed to silence your echo.';
         if (error.code === 'auth/requires-recent-login') {
@@ -365,8 +391,7 @@ exportDataBtn.addEventListener('click', async () => {
 
         if (docSnapshot.exists) {
             dataToExport.submittedNote = docSnapshot.data();
-            // Remove sensitive or redundant fields if present, e.g., 'userId' inside submittedNote
-            delete dataToExport.submittedNote.userId;
+            delete dataToExport.submittedNote.userId; // Remove redundant userId
         }
 
         const dataStr = JSON.stringify(dataToExport, null, 2);
@@ -401,7 +426,7 @@ auth.onAuthStateChanged(async user => {
         randomJourneyBtn.textContent = 'Begin a Random Echo Journey'; // Reset button text
     }
 
-    // Reset UI state first
+    // Reset UI state first when auth state changes
     notesList.innerHTML = ''; // Clear notes list immediately
     lastVisibleNote = null; // Reset pagination
     loadMoreBtn.style.display = 'none'; // Hide load more button initially
@@ -411,39 +436,19 @@ auth.onAuthStateChanged(async user => {
         userEmailDisplay.textContent = anonymizeEmail(user.email);
         authForms.style.display = 'none'; // Hide login/signup forms
         authActions.style.display = 'flex'; // Show logout/delete/export buttons
-        noteSubmissionSection.style.display = 'block'; // Show submission section
 
         updateStatus(authStatus, `Welcome, cosmic traveler: ${anonymizeEmail(user.email)}`, 'success');
 
-        // Check email verification status and user's submission status
-        if (!user.emailVerified) {
-            emailVerificationMessage.style.display = 'block';
-            finalWordsInput.disabled = true;
-            submitNoteBtn.disabled = true;
-            permanentEchoConsent.disabled = true;
-            moodSelect.disabled = true;
-            originSelect.disabled = true;
-            updateStatus(submissionStatus, 'Your cosmic vessel (email) needs validation. A verification link has been dispatched to your email address. Please verify to release your echo.', 'warning');
-            // Re-send verification email option? (For a real app)
-            // if (confirm('Your email is not verified. Resend verification email?')) {
-            //   await user.sendEmailVerification();
-            // }
-        } else {
-            emailVerificationMessage.style.display = 'none';
-            await checkUserSubmissionStatus(user.uid); // Only check submission if email is verified
-        }
+        await checkUserSubmissionStatus(user.uid); // Always check submission status if logged in
     } else {
         // User is logged out
         updateStatus(authStatus, 'To engrave your eternal mark, please sign up or rejoin the astral plane.', 'info');
         authForms.style.display = 'flex'; // Show login/signup forms
         authActions.style.display = 'none'; // Hide logout/delete/export buttons
-        noteSubmissionSection.style.display = 'none'; // Hide submission section if logged out
 
         // Reset submission section state
-        emailVerificationMessage.style.display = 'none';
         finalWordsInput.disabled = false;
-        submitNoteBtn.disabled = false;
-        submitNoteBtn.style.display = 'block';
+        submitNoteBtn.style.display = 'block'; // Ensure button is visible for new user
         permanentEchoConsent.disabled = false;
         permanentEchoConsent.checked = false; // Uncheck consent
         moodSelect.disabled = false;
@@ -454,8 +459,8 @@ auth.onAuthStateChanged(async user => {
         originSelect.value = '';
         updateStatus(submissionStatus, '', ''); // Clear submission status
     }
-    // After handling auth state, determine view based on URL
-    handleRouting();
+    // After handling auth state, determine initial view
+    handleInitialView();
 });
 
 // --- 7. Final Words Submission ---
@@ -464,18 +469,20 @@ finalWordsInput.addEventListener('input', () => {
     const currentLength = finalWordsInput.value.length;
     charCountSpan.textContent = currentLength;
     if (currentLength > 500) {
-        charCountSpan.style.color = 'var(--color-error)';
+        charCountSpan.classList.add('text-red-500'); // Tailwind error color
         submitNoteBtn.disabled = true;
         updateStatus(submissionStatus, 'Your echo is too verbose! (Max 500 characters)', 'error');
     } else {
-        charCountSpan.style.color = 'var(--color-text-secondary)';
-        submitNoteBtn.disabled = !permanentEchoConsent.checked; // Disable if consent not checked
+        charCountSpan.classList.remove('text-red-500'); // Remove error color
+        charCountSpan.classList.add('text-gray-400'); // Tailwind default color
+        submitNoteBtn.disabled = !permanentEchoConsent.checked || currentLength === 0; // Disable if consent not checked or empty
         updateStatus(submissionStatus, '', ''); // Clear error if length is good
     }
 });
 
 permanentEchoConsent.addEventListener('change', () => {
-    submitNoteBtn.disabled = !permanentEchoConsent.checked || finalWordsInput.value.length > 500 || finalWordsInput.value.length === 0;
+    const currentLength = finalWordsInput.value.length;
+    submitNoteBtn.disabled = !permanentEchoConsent.checked || currentLength === 0 || currentLength > 500;
 });
 
 
@@ -485,10 +492,8 @@ submitNoteBtn.addEventListener('click', async () => {
         updateStatus(submissionStatus, 'You must be bound to the cosmos (logged in) to release your unalterable mark.', 'error');
         return;
     }
-    if (!user.emailVerified) {
-        updateStatus(submissionStatus, 'Your cosmic vessel (email) needs verification before you can release your echo.', 'error');
-        return;
-    }
+    // REMOVED: Email verification check
+
     const finalWords = finalWordsInput.value.trim();
     if (finalWords.length === 0) {
         updateStatus(submissionStatus, 'Your echo cannot be empty. What is your message to eternity?', 'error');
@@ -525,7 +530,8 @@ submitNoteBtn.addEventListener('click', async () => {
         finalWordsInput.disabled = true; // Disable further submission
         submitNoteBtn.style.display = 'none'; // Hide button
         charCountSpan.textContent = '0';
-        charCountSpan.style.color = 'var(--color-text-secondary)';
+        charCountSpan.classList.remove('text-red-500');
+        charCountSpan.classList.add('text-gray-400');
         permanentEchoConsent.checked = false; // Reset consent checkbox
         permanentEchoConsent.disabled = true;
         moodSelect.value = ''; // Reset dropdowns
@@ -533,7 +539,7 @@ submitNoteBtn.addEventListener('click', async () => {
         moodSelect.disabled = true;
         originSelect.disabled = true;
 
-        await checkUserSubmissionStatus(user.uid); // Re-check to update UI state
+        await checkUserSubmissionStatus(user.uid); // Re-check to update UI state for "My Echo"
         loadNotes(true); // Reset and reload all notes to show the new one immediately
     } catch (error) {
         let errorMessage = 'Failed to release your echo.';
@@ -558,12 +564,14 @@ submitNoteBtn.addEventListener('click', async () => {
 
 /**
  * Checks if the current user has already submitted their final words.
+ * Updates the 'My Echo' section accordingly.
  * @param {string} uid User's Firebase UID.
  */
 async function checkUserSubmissionStatus(uid) {
     const userNoteRef = db.collection('finalWords').doc(uid);
     try {
         const doc = await userNoteRef.get();
+        currentUserNoteSnapshot = doc; // Store snapshot for direct access
         if (doc.exists) {
             // User has already submitted
             finalWordsInput.value = doc.data().note; // Pre-fill with their existing note
@@ -580,7 +588,6 @@ async function checkUserSubmissionStatus(uid) {
             // User has not submitted
             finalWordsInput.disabled = false;
             submitNoteBtn.style.display = 'block';
-            submitNoteBtn.disabled = !permanentEchoConsent.checked; // Disabled if consent not checked
             permanentEchoConsent.disabled = false;
             permanentEchoConsent.checked = false; // Ensure unchecked for new submission
             moodSelect.disabled = false;
@@ -588,6 +595,9 @@ async function checkUserSubmissionStatus(uid) {
             finalWordsInput.value = ''; // Ensure input is clear for a new echo
             moodSelect.value = ''; // Reset dropdowns
             originSelect.value = '';
+            charCountSpan.textContent = '0';
+            permanentEchoConsent.checked = false; // Make sure consent is not checked by default
+            submitNoteBtn.disabled = true; // Disable by default until consent and text are valid
             updateStatus(submissionStatus, 'Speak your final, unalterable words below. This act can only be performed once. Remember to confirm its permanence.', 'info');
         }
     } catch (error) {
@@ -617,7 +627,7 @@ async function checkUserSubmissionStatus(uid) {
  */
 function createNoteElement(noteData, docId, isShareable = true) {
     const noteElement = document.createElement('div');
-    noteElement.className = 'note-item';
+    noteElement.className = 'note-item bg-gray-700 border border-gray-600 rounded-lg p-6 shadow-md transition-all duration-300 hover:bg-gray-600 cursor-pointer flex flex-col justify-between';
     noteElement.setAttribute('tabindex', '0'); // Make div focusable for keyboard navigation
     noteElement.setAttribute('role', 'listitem'); // Accessibility
 
@@ -630,15 +640,22 @@ function createNoteElement(noteData, docId, isShareable = true) {
     const noteDetailsHtml = formatNoteDetails(noteData.mood, noteData.origin); // New: format details
 
     noteElement.innerHTML = `
-        <p>${safeNote}</p>
-        <div class="note-details">${noteDetailsHtml}</div> <div class="note-author">
+        <p class="text-lg text-gray-200 mb-4 leading-relaxed">${safeNote}</p>
+        <div class="note-details text-sm text-gray-400 italic mb-2">${noteDetailsHtml}</div>
+        <div class="note-author text-xs text-gray-500 text-right mt-auto">
             — From ${safeEmailDisplay} on ${formattedTimestamp}
         </div>
     `;
 
+    // Click listener to view single note
+    noteElement.addEventListener('click', () => {
+        window.location.hash = docId; // Change hash to trigger routing
+    });
+
+
     if (isShareable) {
         const shareBtn = document.createElement('button');
-        shareBtn.className = 'share-btn';
+        shareBtn.className = 'share-btn mt-4 self-end bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75';
         shareBtn.textContent = 'Share Echo';
         shareBtn.setAttribute('aria-label', `Share echo by ${safeEmailDisplay}`);
         shareBtn.addEventListener('click', (event) => {
@@ -677,13 +694,13 @@ async function loadNotes(reset = false) {
         if (querySnapshot.empty && !lastVisibleNote) {
             // No notes at all on first load
             noNotesMessage.textContent = 'The cosmos awaits its first echo. Be the one to break the silence!';
-            noNotesMessage.className = 'status-message info-message';
+            noNotesMessage.className = 'info-message text-gray-400 text-center p-4 bg-gray-700 rounded-md';
             loadMoreBtn.style.display = 'none';
             return;
         } else if (querySnapshot.empty && lastVisibleNote) {
             // No more notes to load
             noNotesMessage.textContent = 'All known echoes have been revealed.';
-            noNotesMessage.className = 'status-message info-message';
+            noNotesMessage.className = 'info-message text-gray-400 text-center p-4 bg-gray-700 rounded-md';
             loadMoreBtn.style.display = 'none';
             return;
         }
@@ -711,7 +728,7 @@ async function loadNotes(reset = false) {
             errorMessage = 'The cosmic connection is lost. Check your internet connection. Cannot load echoes.';
         }
         console.error("Error loading notes:", error);
-        notesList.innerHTML = `<p class="status-message error-message">${errorMessage} Error: ${error.message}</p>`;
+        notesList.innerHTML = `<p class="status-message error-message bg-red-700 text-gray-100 p-4 rounded-md">${errorMessage} Error: ${error.message}</p>`;
         noNotesMessage.style.display = 'none';
         loadMoreBtn.style.display = 'none';
     }
@@ -739,13 +756,13 @@ randomJourneyBtn.addEventListener('click', () => {
         clearInterval(randomJourneyInterval);
         randomJourneyInterval = null;
         randomJourneyBtn.textContent = 'Begin a Random Echo Journey';
-        updateStatus(submissionStatus, 'Random echo journey paused.', 'info');
+        updateStatus(singleNoteStatus, 'Random echo journey paused.', 'info');
         // Return to main view after stopping
         window.location.hash = ''; // Will trigger handleRouting and loadNotes
     } else {
         // Start the journey
         randomJourneyBtn.textContent = 'Pause Journey...';
-        updateStatus(submissionStatus, 'Embarking on a random echo journey...', 'info');
+        updateStatus(singleNoteStatus, 'Embarking on a random echo journey...', 'info');
         glimpseRandomEcho(); // Show first one immediately
         randomJourneyInterval = setInterval(glimpseRandomEcho, 7000); // New random echo every 7 seconds
     }
@@ -753,9 +770,6 @@ randomJourneyBtn.addEventListener('click', () => {
 
 async function glimpseRandomEcho() {
     try {
-        // Fetch ALL notes for true client-side randomness.
-        // WARNING: This can be slow and expensive for very large collections (>1000s of documents).
-        // For production with vast numbers of notes, consider server-side solutions or approximate randomness (e.g., random sort key).
         const allNotesSnapshot = await db.collection('finalWords').get();
 
         if (allNotesSnapshot.empty) {
@@ -794,13 +808,12 @@ async function glimpseRandomEcho() {
 // --- 9. Single Note View & Routing ---
 
 /**
- * Displays a single note in a dedicated view.
+ * Displays a single note in a dedicated view within the "Cosmic Echoes" section.
  * @param {Object} noteData - The data of the note.
  * @param {string} docId - The Firestore document ID for the note.
  */
 function showSingleNote(noteData, docId) {
-    appView.style.display = 'none';
-    singleNoteView.style.display = 'block';
+    showSection(singleNoteView, navAllEchoesBtn); // Keep nav active for "All Echoes"
 
     const formattedTimestamp = noteData.timestamp ?
         new Date(noteData.timestamp.seconds * 1000).toLocaleString() :
@@ -830,7 +843,7 @@ async function fetchAndShowSingleNote(noteId) {
             updateStatus(singleNoteStatus, 'Echo retrieved.', 'success');
         } else {
             updateStatus(singleNoteStatus, 'The requested echo could not be found in the archives.', 'error');
-            singleNoteText.innerHTML = 'This echo has vanished into the ether...';
+            singleNoteText.innerHTML = '<p class="text-xl text-red-300">This echo has vanished into the ether...</p>';
             singleNoteDetails.innerHTML = '';
             singleNoteAuthor.innerHTML = '';
             // Offer to return to main view
@@ -843,7 +856,7 @@ async function fetchAndShowSingleNote(noteId) {
         }
         console.error("Error fetching single note:", error);
         updateStatus(singleNoteStatus, `${errorMessage} Error: ${error.message}`, 'error');
-        singleNoteText.innerHTML = `Failed to load echo: ${error.message}`;
+        singleNoteText.innerHTML = `<p class="text-xl text-red-300">Failed to load echo: ${error.message}</p>`;
         singleNoteDetails.innerHTML = '';
         singleNoteAuthor.innerHTML = '';
         setTimeout(() => { window.location.hash = ''; }, 5000);
@@ -852,7 +865,7 @@ async function fetchAndShowSingleNote(noteId) {
 
 /**
  * Handles routing based on the URL hash.
- * If hash exists, tries to display a single note. Otherwise, shows the main app.
+ * If hash exists, tries to display a single note. Otherwise, shows the "Cosmic Echoes" (all notes) section.
  */
 function handleRouting() {
     // Stop random journey if we are about to switch views
@@ -866,21 +879,62 @@ function handleRouting() {
     if (hash) {
         fetchAndShowSingleNote(hash);
     } else {
-        appView.style.display = 'block';
-        singleNoteView.style.display = 'none';
-        // Ensure main app's notes are loaded
-        loadNotes(true); // Always reset and load when returning to main view
+        // Default to "Cosmic Echoes" section when no hash
+        showSection(notesDisplaySection, navAllEchoesBtn);
+        loadNotes(true); // Always reset and load when returning to main notes view
     }
 }
 
-// Listen for hash changes in the URL
-window.addEventListener('hashchange', handleRouting);
-homeBtn.addEventListener('click', () => {
-    window.location.hash = ''; // Clear hash to trigger main app view
+// Listeners for sidebar navigation
+navProfileBtn.addEventListener('click', () => {
+    showSection(profileSection, navProfileBtn);
+    updateStatus(authStatus, '', ''); // Clear auth status when navigating away
+});
+navMyEchoBtn.addEventListener('click', async () => {
+    showSection(noteSubmissionSection, navMyEchoBtn);
+    const user = auth.currentUser;
+    if (user) {
+        await checkUserSubmissionStatus(user.uid); // Ensure my echo section is updated
+    } else {
+        updateStatus(submissionStatus, 'Please login to view or submit your echo.', 'info');
+        finalWordsInput.disabled = true;
+        submitNoteBtn.style.display = 'none';
+        permanentEchoConsent.disabled = true;
+        moodSelect.disabled = true;
+        originSelect.disabled = true;
+    }
+});
+navAllEchoesBtn.addEventListener('click', () => {
+    window.location.hash = ''; // Clear hash to ensure all notes view
 });
 backToAllNotesBtn.addEventListener('click', () => {
-    window.location.hash = ''; // Clear hash to trigger main app view
+    window.location.hash = ''; // Clear hash to return to all notes
 });
+
+
+// Listen for hash changes in the URL
+window.addEventListener('hashchange', handleRouting);
+
+/**
+ * Determines which section to show initially based on login status and hash.
+ * Called once after initial auth state is determined and age is verified.
+ */
+function handleInitialView() {
+    const user = auth.currentUser;
+    const hash = window.location.hash.substring(1);
+
+    if (hash) {
+        fetchAndShowSingleNote(hash);
+    } else if (user) {
+        // If logged in, default to "My Echo" view
+        showSection(noteSubmissionSection, navMyEchoBtn);
+        checkUserSubmissionStatus(user.uid); // Ensure the section is properly initialized
+    } else {
+        // If not logged in, default to "Profile" view
+        showSection(profileSection, navProfileBtn);
+    }
+    appContainer.style.display = 'flex'; // Show the main app container after deciding initial view
+}
 
 
 // --- 10. Cookie Consent (EU Compliance) ---
@@ -910,6 +964,11 @@ function checkCookieConsent() {
 
 acceptCookiesBtn.addEventListener('click', () => {
     setCookieConsent();
+    // After accepting cookies, check age verification to proceed
+    if (!checkAgeVerification()) {
+        ageVerificationModal.style.display = 'flex';
+        document.body.classList.add('no-scroll');
+    }
 });
 
 // --- 11. Age Verification (EU Compliance) ---
@@ -922,14 +981,8 @@ function setAgeVerification() {
     localStorage.setItem(`${AGE_VERIFICATION_KEY}_expires`, expires.toISOString());
     ageVerificationModal.style.display = 'none';
     document.body.classList.remove('no-scroll'); // Re-enable scrolling
-    // Now that age is verified, proceed with app initialization
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            handleRouting();
-        } else {
-            handleRouting(); // Also call for logged out users
-        }
-    });
+    // Now that age is verified, initialize the app
+    handleInitialView(); // This will show the main app container and route correctly
 }
 
 function checkAgeVerification() {
@@ -962,11 +1015,7 @@ if (navigator.onLine) {
 window.addEventListener('online', () => {
     updateConnectionStatus("Reconnected to the cosmic network. Resuming cosmic operations.", "success");
     // Only re-load if we are in the main view or trying to fetch a single note that failed
-    if (!window.location.hash || singleNoteView.style.display === 'none') { // Check if we are not in single note view, or if it's empty
-        loadNotes(true);
-    } else if (window.location.hash) {
-        fetchAndShowSingleNote(window.location.hash.substring(1));
-    }
+    handleInitialView(); // Re-evaluate view state on reconnect
 });
 
 window.addEventListener('offline', () => {
@@ -979,24 +1028,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check cookie consent first
     const consentGiven = checkCookieConsent();
 
-    // If cookie consent not given, don't show age verification yet, it will be shown after consent
-    // If consent given, then check age verification
     if (consentGiven) {
+        // If cookie consent is already given, then check age verification
         const ageVerified = checkAgeVerification();
         if (ageVerified) {
-            // If both verified, proceed with Firebase Auth state management
-            // The onAuthStateChanged listener will then trigger handleRouting and loadNotes
-            // We ensure it fires by setting initial state or calling it directly if not relying on first login
-            // Firebase SDK handles initial auth state check on its own
+            // If both verified, proceed with full app initialization
+            handleInitialView();
         }
-    } else {
-        // If consent not given, age verification will be shown only after consent
+        // If age not verified, modal is already shown by checkAgeVerification
     }
+    // If consent not given, cookie banner is shown by checkCookieConsent, and appContainer remains hidden.
+    // The age verification check will only proceed after cookies are accepted.
 });
-
-// This is crucial: only run initial routing/auth logic IF age is verified.
-// The auth.onAuthStateChanged listener is *moved* inside the age verification success path,
-// or called after age check on DOMContentLoaded if already verified.
-// For simplicity and to ensure auth always initializes, we keep onAuthStateChanged at global scope,
-// but control the UI display based on age/cookie checks.
-// The initial call to `handleRouting` from `onAuthStateChanged` ensures the correct view loads.
