@@ -8,8 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Spectral:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌌</text></svg>">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-</head>
+    </head>
 <body>
     <div class="background-nebula"></div>
     <div class="container" role="main">
@@ -41,7 +40,7 @@
                 <div id="auth-forms" class="form-group">
                     <input type="email" id="email" placeholder="Your essence (Email)" autocomplete="username" aria-label="Email for authentication">
                     <input type="password" id="password" placeholder="The arcane key (Password)" autocomplete="current-password" aria-label="Password for authentication">
-                    <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY" data-theme="dark"></div> <div class="button-group">
+                    <div class="button-group">
                         <button id="signup-btn" class="primary-btn" aria-label="Sign Up and Engrave Existence">Engrave My Existence (Sign Up)</button>
                         <button id="login-btn" class="secondary-btn" aria-label="Login and Rejoin Astral Plane">Rejoin the Astral Plane (Login)</button>
                     </div>
@@ -162,7 +161,7 @@
             <h3>Security Measures:</h3>
             <ul>
                 <li>We utilize Firebase Authentication for robust user management, including industry-standard password hashing and protection against brute-force attacks.</li>
-                <li>Google reCAPTCHA is employed during registration/login to deter automated bot activity.</li>
+                <li></li>
                 <li>Your submitted echo is sanitized using DOMPurify to prevent malicious code injection (XSS attacks).</li>
                 <li>Firestore Security Rules strictly control data access and ensure the "one-time, unalterable" nature of your echo.</li>
             </ul>
