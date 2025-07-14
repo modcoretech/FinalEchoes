@@ -1,21 +1,37 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Spectral:ital,wght@0,300;0,400;0,700;1,300&display=swap');
+
 :root {
-    --color-background-dark: #0a0a1a;
-    --color-background-light: #151530;
-    --color-card-background: #0f0f2a;
-    --color-text-primary: #e0e0f0;
-    --color-text-secondary: #a0a0c0;
-    --color-accent-primary: #8a2be2; /* Darker violet */
-    --color-accent-secondary: #4b0082; /* Indigo */
-    --color-border: #202040;
-    --color-button-primary: #8a2be2; /* Violet */
-    --color-button-secondary: #4b0082; /* Indigo */
-    --color-button-danger: #e23b3b;
-    --color-success: #4CAF50;
-    --color-error: #e23b3b;
-    --color-info: #3b8fe2;
-    --color-warning: #e2b83b;
+    /* Cosmic Color Palette */
+    --color-background-dark: #0a0a1a; /* Deep void */
+    --color-background-light: #151530; /* Faint cosmic dust */
+    --color-card-background: #0f0f2a; /* Encased cosmic artifact */
+    --color-text-primary: #e0e0f0; /* Starlight white */
+    --color-text-secondary: #a0a0c0; /* Fading starlight */
+    --color-accent-primary: #8a2be2; /* Violet nebula */
+    --color-accent-secondary: #4b0082; /* Indigo void */
+    --color-border: #202040; /* Cosmic rift outline */
+    --color-button-primary: #8a2be2; /* Violet portal */
+    --color-button-secondary: #4b0082; /* Indigo gateway */
+    --color-button-danger: #e23b3b; /* Dying star */
+    --color-success: #4CAF50; /* Life emerging */
+    --color-error: #e23b3b; /* Cosmic anomaly */
+    --color-info: #3b8fe2; /* Distant blue star */
+    --color-warning: #e2b83b; /* Shifting energy */
+
+    /* RGB values for rgba() usage */
+    --color-accent-primary-rgb: 138, 43, 226;
+    --color-accent-secondary-rgb: 75, 0, 130;
+    --color-button-primary-rgb: 138, 43, 226;
+    --color-button-secondary-rgb: 75, 0, 130;
+    --color-button-danger-rgb: 226, 59, 59;
+    --color-success-rgb: 76, 175, 80;
+    --color-error-rgb: 226, 59, 59;
+    --color-info-rgb: 59, 143, 226;
+    --color-warning-rgb: 226, 184, 59;
 }
 
+/* Base Styles */
 body {
     font-family: 'Spectral', serif; /* A more mysterious, serif font */
     background-color: var(--color-background-dark);
@@ -30,6 +46,20 @@ body {
     overflow-y: auto; /* Allow scrolling for content */
     position: relative;
     line-height: 1.6;
+    scroll-behavior: smooth; /* For smooth scrolling to privacy section */
+}
+
+/* Accessible hidden content */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 /* Background Nebula Animation */
@@ -52,6 +82,7 @@ body {
     100% { background-position: 100% 100%; }
 }
 
+/* Main Container */
 .container {
     background-color: var(--color-card-background);
     padding: 30px;
@@ -66,6 +97,7 @@ body {
     overflow: hidden; /* For containing fade-in elements */
 }
 
+/* Header */
 .site-header {
     text-align: center;
     margin-bottom: 50px;
@@ -74,7 +106,7 @@ body {
 }
 
 h1 {
-    font-family: 'Cinzel Decorative', cursive; /* A more epic, decorative font */
+    font-family: 'Cinzel Decorative', cursive; /* Epic, decorative font */
     color: var(--color-text-primary);
     font-size: 4em;
     text-shadow: 0 0 20px var(--color-accent-primary), 0 0 30px var(--color-accent-secondary);
@@ -90,6 +122,17 @@ h1 {
     margin-top: 0;
 }
 
+/* Navigation */
+.main-nav {
+    margin-top: 30px;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 6px;
+}
+
 h2 {
     font-family: 'Spectral', serif;
     color: var(--color-text-primary);
@@ -102,6 +145,7 @@ h2 {
     letter-spacing: 1px;
 }
 
+/* Card Styling for Sections */
 .card {
     border: 1px solid var(--color-border);
     background-color: var(--color-background-light);
@@ -122,16 +166,26 @@ h2 {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Form Grouping & Inputs */
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+.form-group-inline {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 15px;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
 input[type="email"],
 input[type="password"],
-textarea {
-    width: 100%;
+textarea,
+select {
+    width: 100%; /* Default to full width */
     padding: 16px;
     border: 1px solid var(--color-border);
     border-radius: 8px;
@@ -140,11 +194,24 @@ textarea {
     font-size: 1.05rem;
     transition: border-color 0.4s ease, box-shadow 0.4s ease;
     box-sizing: border-box;
+    appearance: none; /* Remove default select styles */
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0a0c0'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 20px;
+}
+
+select {
+    padding-right: 40px; /* Space for custom arrow */
+    flex: 1; /* Allow selects to grow/shrink in inline group */
+    min-width: 180px; /* Minimum width before wrapping */
 }
 
 input[type="email"]:focus,
 input[type="password"]:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
     border-color: var(--color-accent-primary);
     box-shadow: 0 0 15px rgba(var(--color-accent-primary), 0.6);
     outline: none;
@@ -163,6 +230,32 @@ textarea {
     margin-bottom: 20px;
 }
 
+.checkbox-group {
+    display: flex;
+    align-items: flex-start; /* Align checkbox and text */
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    font-size: 0.95em;
+    color: var(--color-text-secondary);
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px; /* Ensure it doesn't shrink */
+    background-color: var(--color-background-dark);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    margin-top: 2px; /* Adjust vertical alignment with text */
+}
+
+.checkbox-group label {
+    cursor: pointer;
+}
+
+
+/* Button Styles */
 .button-group {
     display: flex;
     flex-wrap: wrap;
@@ -190,10 +283,11 @@ button {
     box-shadow: 0 5px 15px rgba(var(--color-button-primary), 0.5);
 }
 
-.primary-btn:hover {
+.primary-btn:hover, .primary-btn:focus {
     background-color: #7b21cd; /* Slightly darker violet */
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(var(--color-button-primary), 0.6);
+    outline: none; /* Remove default focus outline */
 }
 
 .secondary-btn {
@@ -202,10 +296,11 @@ button {
     box-shadow: 0 5px 15px rgba(var(--color-button-secondary), 0.4);
 }
 
-.secondary-btn:hover {
+.secondary-btn:hover, .secondary-btn:focus {
     background-color: #3f006b; /* Slightly darker indigo */
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(var(--color-button-secondary), 0.5);
+    outline: none;
 }
 
 .danger-btn {
@@ -214,10 +309,11 @@ button {
     box-shadow: 0 5px 15px rgba(var(--color-button-danger), 0.5);
 }
 
-.danger-btn:hover {
+.danger-btn:hover, .danger-btn:focus {
     background-color: #c72a2a; /* Slightly darker red */
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(var(--color-button-danger), 0.6);
+    outline: none;
 }
 
 button:disabled {
@@ -228,6 +324,23 @@ button:disabled {
     opacity: 0.6;
 }
 
+.link-style {
+    background: none;
+    border: none;
+    color: var(--color-info);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.link-style:hover, .link-style:focus {
+    color: white;
+    outline: none;
+}
+
+/* Status Messages */
 .status-message {
     margin-top: 25px;
     padding: 15px;
@@ -240,29 +353,30 @@ button:disabled {
 }
 
 .success-message {
-    background-color: rgba(76, 175, 80, 0.2); /* RGB for var(--color-success) */
+    background-color: rgba(var(--color-success-rgb), 0.2);
     color: var(--color-success);
     border-color: var(--color-success);
 }
 
 .error-message {
-    background-color: rgba(226, 59, 59, 0.2); /* RGB for var(--color-error) */
+    background-color: rgba(var(--color-error-rgb), 0.2);
     color: var(--color-error);
     border-color: var(--color-error);
 }
 
 .info-message {
-    background-color: rgba(59, 143, 226, 0.2); /* RGB for var(--color-info) */
+    background-color: rgba(var(--color-info-rgb), 0.2);
     color: var(--color-info);
     border-color: var(--color-info);
 }
 
 .warning-message {
-    background-color: rgba(226, 184, 59, 0.2); /* RGB for var(--color-warning) */
+    background-color: rgba(var(--color-warning-rgb), 0.2);
     color: var(--color-warning);
     border-color: var(--color-warning);
 }
 
+/* Note Display */
 .note-item {
     background-color: var(--color-background-dark);
     border: 1px solid var(--color-border);
@@ -274,6 +388,20 @@ button:disabled {
     line-height: 1.8;
     font-size: 1.15em;
     position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.note-details {
+    font-size: 0.9em;
+    color: var(--color-text-secondary);
+    margin-top: 10px;
+    text-align: left;
+    font-style: italic;
 }
 
 .note-author {
@@ -329,15 +457,16 @@ button:disabled {
     border-radius: 5px;
     transition: all 0.2s ease;
 }
-.share-btn:hover {
+.share-btn:hover, .share-btn:focus {
     background-color: var(--color-accent-secondary);
     color: white;
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    outline: none;
 }
 
 /* Cookie Consent Banner */
-.cookie-banner {
+.cookie-banner, .modal {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -345,7 +474,6 @@ button:disabled {
     background-color: var(--color-background-light);
     color: var(--color-text-primary);
     padding: 20px;
-    text-align: center;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
     border-top: 1px solid var(--color-border);
     z-index: 1000;
@@ -353,12 +481,105 @@ button:disabled {
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    animation: slideUp 0.5s ease-out forwards;
 }
 
-.cookie-banner p {
-    margin: 0;
-    max-width: 600px;
-    font-size: 0.95em;
+/* Modal (Age Verification) - Overlays everything */
+.modal {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Darker overlay */
+    justify-content: center;
+    align-items: center;
+    border-top: none;
+    box-shadow: none;
+}
+
+.modal-content {
+    background-color: var(--color-card-background);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    border: 1px solid var(--color-border);
+    animation: zoomIn 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+
+/* Privacy Section (Footer) */
+.privacy-section {
+    background-color: var(--color-background-light);
+    border-radius: 12px;
+    margin-top: 60px;
+    padding: 30px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.privacy-section h2 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    color: var(--color-accent-primary);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 10px;
+}
+
+.privacy-section h3 {
+    color: var(--color-text-primary);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.privacy-section ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 25px;
+}
+
+.privacy-section ul li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+    color: var(--color-text-secondary);
+}
+
+.privacy-section ul li::before {
+    content: '✨'; /* Cosmic bullet point */
+    position: absolute;
+    left: 0;
+    color: var(--color-accent-primary);
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.privacy-section p {
+    color: var(--color-text-secondary);
+    margin-bottom: 15px;
+}
+
+.privacy-section .legal-note {
+    font-size: 0.85em;
+    text-align: center;
+    margin-top: 30px;
+    color: var(--color-text-secondary);
+    border-top: 1px dotted var(--color-border);
+    padding-top: 15px;
 }
 
 /* Responsive adjustments */
@@ -384,8 +605,15 @@ button:disabled {
     }
     input[type="email"],
     input[type="password"],
-    textarea {
+    textarea,
+    select {
         padding: 14px;
+    }
+    .form-group-inline {
+        flex-direction: column;
+    }
+    select {
+        min-width: unset; /* Remove min-width constraint on mobile */
     }
     .note-item {
         padding: 20px;
@@ -397,6 +625,15 @@ button:disabled {
         width: fit-content;
         margin-left: auto;
         margin-right: auto;
+    }
+    .cookie-banner, .modal-content {
+        padding: 15px;
+    }
+    .cookie-banner p {
+        font-size: 0.85em;
+    }
+    .modal-content h2 {
+        font-size: 1.5em;
     }
 }
 
@@ -410,23 +647,4 @@ button:disabled {
     h2 {
         font-size: 1.3em;
     }
-    .cookie-banner {
-        padding: 15px;
-    }
-    .cookie-banner p {
-        font-size: 0.85em;
-    }
-}
-
-/* Define RGB values for use in rgba() for shadows etc. */
-body {
-    --color-accent-primary-rgb: 138, 43, 226;
-    --color-accent-secondary-rgb: 75, 0, 130;
-    --color-button-primary-rgb: 138, 43, 226;
-    --color-button-secondary-rgb: 75, 0, 130;
-    --color-button-danger-rgb: 226, 59, 59;
-    --color-success-rgb: 76, 175, 80;
-    --color-error-rgb: 226, 59, 59;
-    --color-info-rgb: 59, 143, 226;
-    --color-warning-rgb: 226, 184, 59;
 }
