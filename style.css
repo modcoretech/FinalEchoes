@@ -1,23 +1,23 @@
 :root {
-    --color-background-dark: #1a1a2e;
-    --color-background-light: #2a2a4a;
-    --color-card-background: #16213e;
-    --color-text-primary: #e0e0e0;
-    --color-text-secondary: #a0a0a0;
-    --color-accent-primary: #0f3460;
-    --color-accent-secondary: #533483;
-    --color-border: #001f3f;
-    --color-button-primary: #e94560;
-    --color-button-secondary: #2c528f; /* Darker blue for contrast */
-    --color-button-danger: #d62839;
+    --color-background-dark: #0a0a1a;
+    --color-background-light: #151530;
+    --color-card-background: #0f0f2a;
+    --color-text-primary: #e0e0f0;
+    --color-text-secondary: #a0a0c0;
+    --color-accent-primary: #8a2be2; /* Darker violet */
+    --color-accent-secondary: #4b0082; /* Indigo */
+    --color-border: #202040;
+    --color-button-primary: #8a2be2; /* Violet */
+    --color-button-secondary: #4b0082; /* Indigo */
+    --color-button-danger: #e23b3b;
     --color-success: #4CAF50;
-    --color-error: #FF5252;
-    --color-info: #2196F3;
-    --color-warning: #FFC107;
+    --color-error: #e23b3b;
+    --color-info: #3b8fe2;
+    --color-warning: #e2b83b;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Spectral', serif; /* A more mysterious, serif font */
     background-color: var(--color-background-dark);
     color: var(--color-text-primary);
     margin: 0;
@@ -27,210 +27,238 @@ body {
     align-items: flex-start;
     min-height: 100vh;
     box-sizing: border-box;
-    overflow-y: scroll; /* Allow scrolling for content */
+    overflow-y: auto; /* Allow scrolling for content */
     position: relative;
+    line-height: 1.6;
 }
 
-.background-overlay {
+/* Background Nebula Animation */
+.background-nebula {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at top left, var(--color-background-light) 0%, transparent 40%),
-                radial-gradient(circle at bottom right, var(--color-background-light) 0%, transparent 40%);
-    opacity: 0.3;
+    background: radial-gradient(circle at 10% 20%, rgba(var(--color-accent-primary-rgb), 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 90%, rgba(var(--color-accent-secondary-rgb), 0.2) 0%, transparent 40%);
+    background-size: 200% 200%;
+    animation: nebula-drift 30s infinite alternate ease-in-out;
     pointer-events: none;
     z-index: -1;
+}
+
+@keyframes nebula-drift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
 }
 
 .container {
     background-color: var(--color-card-background);
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
     width: 100%;
     max-width: 800px;
     box-sizing: border-box;
-    margin: 20px auto;
+    margin: 30px auto;
     border: 1px solid var(--color-border);
-    position: relative; /* For z-index if needed */
+    position: relative;
+    overflow: hidden; /* For containing fade-in elements */
 }
 
 .site-header {
     text-align: center;
-    margin-bottom: 40px;
-    position: relative;
-    z-index: 1; /* Ensure header is above overlay */
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--color-border);
 }
 
 h1 {
+    font-family: 'Cinzel Decorative', cursive; /* A more epic, decorative font */
     color: var(--color-text-primary);
-    font-size: 3.5em;
-    text-shadow: 0 0 15px var(--color-accent-primary);
+    font-size: 4em;
+    text-shadow: 0 0 20px var(--color-accent-primary), 0 0 30px var(--color-accent-secondary);
     margin-bottom: 10px;
+    letter-spacing: 2px;
 }
 
 .tagline {
+    font-family: 'Spectral', serif;
     color: var(--color-text-secondary);
     font-style: italic;
-    font-size: 1.1em;
+    font-size: 1.2em;
     margin-top: 0;
 }
 
 h2 {
+    font-family: 'Spectral', serif;
     color: var(--color-text-primary);
     text-align: center;
-    margin-bottom: 25px;
-    border-bottom: 1px dashed var(--color-border);
+    margin-bottom: 30px;
+    border-bottom: 1px dotted var(--color-border);
     padding-bottom: 15px;
-    font-size: 1.8em;
-    text-shadow: 0 0 8px rgba(var(--color-accent-secondary), 0.5);
+    font-size: 2em;
+    text-shadow: 0 0 10px rgba(var(--color-accent-secondary), 0.7);
+    letter-spacing: 1px;
 }
 
 .card {
     border: 1px solid var(--color-border);
     background-color: var(--color-background-light);
-    padding: 25px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Fade-in Animation for Sections */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 input[type="email"],
 input[type="password"],
 textarea {
     width: 100%;
-    padding: 15px;
+    padding: 16px;
     border: 1px solid var(--color-border);
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: var(--color-background-dark);
     color: var(--color-text-primary);
-    font-size: 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    font-size: 1.05rem;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    box-sizing: border-box;
 }
 
 input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
     border-color: var(--color-accent-primary);
-    box-shadow: 0 0 10px rgba(var(--color-accent-primary), 0.5);
+    box-shadow: 0 0 15px rgba(var(--color-accent-primary), 0.6);
     outline: none;
 }
 
 textarea {
     resize: vertical;
-    min-height: 150px;
+    min-height: 180px;
 }
 
 .char-counter {
     text-align: right;
     font-size: 0.9em;
     color: var(--color-text-secondary);
-    margin-top: -10px;
-    margin-bottom: 15px;
+    margin-top: -15px;
+    margin-bottom: 20px;
 }
 
 .button-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 20px;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 25px;
 }
 
 button {
-    padding: 12px 25px;
+    padding: 15px 30px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.05em;
+    font-size: 1.1em;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .primary-btn {
     background-color: var(--color-button-primary);
     color: white;
-    box-shadow: 0 4px 10px rgba(var(--color-button-primary), 0.4);
+    box-shadow: 0 5px 15px rgba(var(--color-button-primary), 0.5);
 }
 
 .primary-btn:hover {
-    background-color: darken(var(--color-button-primary), 10%); /* This won't work in pure CSS, need JS or specific color */
-    background-color: #d83e58; /* Manual darken for example */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(var(--color-button-primary), 0.5);
+    background-color: #7b21cd; /* Slightly darker violet */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(var(--color-button-primary), 0.6);
 }
 
 .secondary-btn {
     background-color: var(--color-button-secondary);
     color: white;
-    box-shadow: 0 4px 10px rgba(var(--color-button-secondary), 0.3);
+    box-shadow: 0 5px 15px rgba(var(--color-button-secondary), 0.4);
 }
 
 .secondary-btn:hover {
-    background-color: #244177; /* Manual darken for example */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(var(--color-button-secondary), 0.4);
+    background-color: #3f006b; /* Slightly darker indigo */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(var(--color-button-secondary), 0.5);
 }
 
 .danger-btn {
     background-color: var(--color-button-danger);
     color: white;
-    box-shadow: 0 4px 10px rgba(var(--color-button-danger), 0.4);
+    box-shadow: 0 5px 15px rgba(var(--color-button-danger), 0.5);
 }
 
 .danger-btn:hover {
-    background-color: #b9202f; /* Manual darken for example */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(var(--color-button-danger), 0.5);
+    background-color: #c72a2a; /* Slightly darker red */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(var(--color-button-danger), 0.6);
 }
 
 button:disabled {
-    background-color: #555;
+    background-color: #333;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+    opacity: 0.6;
 }
 
 .status-message {
-    margin-top: 20px;
-    padding: 12px;
-    border-radius: 6px;
-    font-size: 0.95em;
+    margin-top: 25px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1em;
     text-align: center;
     font-weight: bold;
-    border: 1px solid transparent; /* Default transparent border */
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
 }
 
 .success-message {
-    background-color: rgba(var(--color-success), 0.2);
+    background-color: rgba(76, 175, 80, 0.2); /* RGB for var(--color-success) */
     color: var(--color-success);
     border-color: var(--color-success);
 }
 
 .error-message {
-    background-color: rgba(var(--color-error), 0.2);
+    background-color: rgba(226, 59, 59, 0.2); /* RGB for var(--color-error) */
     color: var(--color-error);
     border-color: var(--color-error);
 }
 
 .info-message {
-    background-color: rgba(var(--color-info), 0.2);
+    background-color: rgba(59, 143, 226, 0.2); /* RGB for var(--color-info) */
     color: var(--color-info);
     border-color: var(--color-info);
 }
 
 .warning-message {
-    background-color: rgba(var(--color-warning), 0.2);
+    background-color: rgba(226, 184, 59, 0.2); /* RGB for var(--color-warning) */
     color: var(--color-warning);
     border-color: var(--color-warning);
 }
@@ -238,64 +266,167 @@ button:disabled {
 .note-item {
     background-color: var(--color-background-dark);
     border: 1px solid var(--color-border);
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
     border-radius: 10px;
     word-wrap: break-word;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    line-height: 1.7;
-    font-size: 1.1em;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    line-height: 1.8;
+    font-size: 1.15em;
+    position: relative;
 }
 
 .note-author {
-    font-size: 0.85em;
+    font-family: 'Spectral', serif;
+    font-size: 0.9em;
     color: var(--color-text-secondary);
-    margin-top: 15px;
+    margin-top: 20px;
     text-align: right;
     font-style: italic;
-    border-top: 1px dashed var(--color-border);
-    padding-top: 10px;
+    border-top: 1px dotted var(--color-border);
+    padding-top: 15px;
 }
 
 #no-notes-message {
     text-align: center;
-    margin: 30px 0;
+    margin: 40px 0;
 }
 
 .notes-actions {
     display: flex;
     justify-content: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+#load-more-btn, #back-to-all-notes-btn {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0;
+}
+
+/* Single Note View Specifics */
+#single-note-view .card {
+    text-align: center;
+}
+
+#single-note-text {
+    font-size: 1.5em;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+/* Share Button on individual notes */
+.share-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 8px 12px;
+    font-size: 0.85em;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+.share-btn:hover {
+    background-color: var(--color-accent-secondary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Cookie Consent Banner */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-background-light);
+    color: var(--color-text-primary);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    border-top: 1px solid var(--color-border);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 15px;
 }
 
-#load-more-btn {
-    display: block;
-    width: fit-content;
-    margin: 20px auto 0;
+.cookie-banner p {
+    margin: 0;
+    max-width: 600px;
+    font-size: 0.95em;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .container {
         padding: 20px;
-        margin: 10px auto;
+        margin: 20px auto;
     }
     h1 {
-        font-size: 2.8em;
+        font-size: 3.2em;
     }
     h2 {
-        font-size: 1.5em;
+        font-size: 1.7em;
     }
     .button-group {
         flex-direction: column;
         align-items: stretch;
+        gap: 10px;
     }
     button {
         width: 100%;
+        padding: 12px 20px;
     }
     input[type="email"],
     input[type="password"],
     textarea {
-        padding: 12px;
+        padding: 14px;
     }
+    .note-item {
+        padding: 20px;
+    }
+    .share-btn {
+        position: static; /* Remove absolute positioning */
+        margin-top: 15px;
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.5em;
+    }
+    .tagline {
+        font-size: 1em;
+    }
+    h2 {
+        font-size: 1.3em;
+    }
+    .cookie-banner {
+        padding: 15px;
+    }
+    .cookie-banner p {
+        font-size: 0.85em;
+    }
+}
+
+/* Define RGB values for use in rgba() for shadows etc. */
+body {
+    --color-accent-primary-rgb: 138, 43, 226;
+    --color-accent-secondary-rgb: 75, 0, 130;
+    --color-button-primary-rgb: 138, 43, 226;
+    --color-button-secondary-rgb: 75, 0, 130;
+    --color-button-danger-rgb: 226, 59, 59;
+    --color-success-rgb: 76, 175, 80;
+    --color-error-rgb: 226, 59, 59;
+    --color-info-rgb: 59, 143, 226;
+    --color-warning-rgb: 226, 184, 59;
 }
