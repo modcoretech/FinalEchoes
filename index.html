@@ -5,25 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Final Echoes</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Final Echoes</h1>
+        <p class="tagline">Leave your permanent mark on the digital ether. One echo, forever.</p>
+
         <div id="auth-section">
             <div id="auth-forms">
-                <h2>Sign Up / Login</h2>
-                <input type="email" id="email" placeholder="Email">
-                <input type="password" id="password" placeholder="Password">
+                <h2>Begin Your Echo</h2>
+                <input type="email" id="email" placeholder="Email" autocomplete="username">
+                <input type="password" id="password" placeholder="Password" autocomplete="current-password">
                 <button id="signup-btn">Sign Up</button>
                 <button id="login-btn">Login</button>
             </div>
             <p id="auth-status"></p>
-            <button id="logout-btn" style="display:none;">Logout</button>
+            <div class="auth-actions">
+                <button id="logout-btn" style="display:none;">Leave Echoes (Logout)</button>
+                <button id="delete-account-btn" class="danger-btn" style="display:none;">Silence My Account</button> </div>
         </div>
 
         <div id="note-submission-section" style="display:none;">
             <h2>Your Final Words</h2>
-            <textarea id="final-words-input" placeholder="Type your final words here..." rows="10" maxlength="500"></textarea>
+            <textarea id="final-words-input" placeholder="What are your final, eternal words? (Max 500 characters)" rows="10" maxlength="500"></textarea>
             <p><span id="char-count">0</span>/500 characters</p>
             <button id="submit-note-btn">Submit My Final Words</button>
             <p id="submission-status"></p>
@@ -31,16 +36,17 @@
 
         <div id="notes-display-section">
             <h2>Echoes from Others</h2>
+            <div class="notes-actions">
+                <button id="random-note-btn">Uncover a Random Echo</button> </div>
             <div id="notes-list">
                 <p id="no-notes-message">Loading echoes...</p>
             </div>
-        </div>
+            <button id="load-more-btn" style="display:none;">Load More Echoes</button> </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <script src="script.js"></script>
 </body>
