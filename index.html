@@ -4,72 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Final Echoes - Whispers from the Void</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Spectral:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌌</text></svg>">
-    </head>
-<body>
+    <link rel="stylesheet" href="style.css"> </head>
+<body class="bg-gray-900 text-gray-200 font-spectral min-h-screen flex flex-col">
     <div class="background-nebula"></div>
-    <div class="container" role="main">
-        <header class="site-header" role="banner">
-            <h1>The Final Echoes</h1>
-            <p class="tagline">Whispers across the cosmic void. One unalterable mark, forever.</p>
-            <div id="connection-status" class="status-message info-message" aria-live="polite">Establishing cosmic link...</div>
-            <nav class="main-nav" aria-label="Main Navigation">
-                <button id="home-btn" class="nav-btn secondary-btn" aria-label="Return to All Echoes">
-                    Home / All Echoes
-                </button>
-            </nav>
-        </header>
 
-        <div id="age-verification-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="age-modal-title" style="display:none;">
-            <div class="modal-content">
-                <h2 id="age-modal-title">Enter the Cosmic Archives</h2>
-                <p>To ensure compliance with intergalactic data protocols (like GDPR), please confirm your age.</p>
-                <p>By proceeding, you affirm that you are **16 years or older** and accept the <a href="#privacy-info" class="link-style" aria-label="Read our Privacy Information">privacy information</a> below regarding your single, unalterable echo.</p>
-                <div class="button-group">
-                    <button id="age-confirm-btn" class="primary-btn">I Am 16+ / Accept</button>
-                </div>
-            </div>
+    <div id="age-verification-modal" class="fixed inset-0 bg-gray-950 bg-opacity-90 z-50 flex items-center justify-center p-4" style="display:none;">
+        <div class="bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-8 max-w-md w-full text-center fade-in">
+            <h2 id="age-modal-title" class="text-3xl font-bold text-teal-300 mb-4 font-cinzel">Enter the Cosmic Archives</h2>
+            <p class="text-gray-300 mb-6 leading-relaxed">To ensure compliance with intergalactic data protocols (like GDPR), please confirm your age.</p>
+            <p class="text-gray-400 text-sm mb-8">By proceeding, you affirm that you are <strong class="text-teal-300">16 years or older</strong> and accept the <a href="#privacy-info" class="text-blue-400 hover:text-blue-300 transition-colors duration-200" aria-label="Read our Privacy Information">privacy information</a> below regarding your single, unalterable echo.</p>
+            <button id="age-confirm-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75">I Am 16+ / Accept</button>
         </div>
+    </div>
 
-        <div id="app-view" style="display:none;">
-            <section id="auth-section" class="card fade-in" aria-labelledby="auth-heading">
-                <h2 id="auth-heading">Cosmic Passage</h2>
-                <div id="auth-forms" class="form-group">
-                    <input type="email" id="email" placeholder="Your essence (Email)" autocomplete="username" aria-label="Email for authentication">
-                    <input type="password" id="password" placeholder="The arcane key (Password)" autocomplete="current-password" aria-label="Password for authentication">
-                    <div class="button-group">
-                        <button id="signup-btn" class="primary-btn" aria-label="Sign Up and Engrave Existence">Engrave My Existence (Sign Up)</button>
-                        <button id="login-btn" class="secondary-btn" aria-label="Login and Rejoin Astral Plane">Rejoin the Astral Plane (Login)</button>
+    <div id="app-container" class="flex flex-1 relative z-10 max-w-screen-xl mx-auto w-full p-4 md:p-6 lg:p-8" style="display:none;">
+
+        <aside class="w-full md:w-64 lg:w-72 flex-shrink-0 bg-gray-800 border border-gray-700 rounded-lg p-6 mr-0 md:mr-6 lg:mr-8 mb-6 md:mb-0 shadow-lg flex flex-col">
+            <header class="mb-8 text-center md:text-left">
+                <h1 class="text-4xl font-bold text-teal-300 font-cinzel">The Final Echoes</h1>
+                <p class="text-sm text-gray-400 mt-2 italic leading-tight">Whispers across the cosmic void.<br>One unalterable mark, forever.</p>
+            </header>
+
+            <div id="connection-status" class="status-message info-message bg-gray-700 text-gray-300 text-sm p-3 rounded-md mb-6" aria-live="polite">Establishing cosmic link...</div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-4">
+                    <li>
+                        <button id="nav-profile" class="nav-btn w-full text-left p-3 rounded-md text-lg font-semibold flex items-center justify-center md:justify-start transition-colors duration-200 hover:bg-teal-700 hover:text-white bg-gray-700 text-teal-300">
+                            <span class="mr-3 text-xl">👤</span> Profile
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-my-echo" class="nav-btn w-full text-left p-3 rounded-md text-lg font-semibold flex items-center justify-center md:justify-start transition-colors duration-200 hover:bg-teal-700 hover:text-white bg-gray-700 text-teal-300">
+                            <span class="mr-3 text-xl">✒️</span> Your Echo
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-all-echoes" class="nav-btn w-full text-left p-3 rounded-md text-lg font-semibold flex items-center justify-center md:justify-start transition-colors duration-200 hover:bg-teal-700 hover:text-white bg-teal-600 text-white">
+                            <span class="mr-3 text-xl">🌌</span> Cosmic Echoes
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="flex-grow bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg overflow-y-auto">
+
+            <section id="profile-section" class="content-section" style="display:none;">
+                <h2 class="text-3xl font-bold text-teal-300 mb-6 font-cinzel">Cosmic Passage / Profile</h2>
+                <div id="auth-forms" class="space-y-4 mb-6">
+                    <input type="email" id="email" placeholder="Your essence (Email)" autocomplete="username" aria-label="Email for authentication" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <input type="password" id="password" placeholder="The arcane key (Password)" autocomplete="current-password" aria-label="Password for authentication" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="signup-btn" class="flex-1 primary-btn bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75">Engrave My Existence (Sign Up)</button>
+                        <button id="login-btn" class="flex-1 secondary-btn bg-gray-600 hover:bg-gray-700 text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75">Rejoin the Astral Plane (Login)</button>
                     </div>
-                    <button id="reset-password-btn" class="link-style" aria-label="Reset Password">Forgot your arcane key?</button>
+                    <button id="reset-password-btn" class="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200 mt-2" aria-label="Reset Password">Forgot your arcane key?</button>
                 </div>
-                <p id="auth-status" class="status-message" aria-live="polite"></p>
-                <div class="auth-actions" style="display:none;">
-                    <p id="logged-in-user-display" aria-live="polite">Currently bound as: <span id="user-email-display"></span></p>
-                    <div class="button-group">
-                        <button id="logout-btn" class="secondary-btn" aria-label="Logout and Fade into the Void">Fade into the Void (Logout)</button>
-                        <button id="delete-account-btn" class="danger-btn" aria-label="Delete Account and Silence Own Echo">Silence My Own Echo</button>
+                <p id="auth-status" class="status-message text-sm p-3 rounded-md mb-6" aria-live="polite"></p>
+
+                <div class="auth-actions space-y-4" style="display:none;">
+                    <p id="logged-in-user-display" class="text-lg text-gray-300" aria-live="polite">Currently bound as: <span id="user-email-display" class="font-semibold text-teal-300"></span></p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="logout-btn" class="flex-1 secondary-btn bg-gray-600 hover:bg-gray-700 text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75">Fade into the Void (Logout)</button>
+                        <button id="delete-account-btn" class="flex-1 danger-btn bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75">Silence My Own Echo</button>
                     </div>
-                    <button id="export-data-btn" class="secondary-btn" aria-label="Export My Echo and Account Data">Download My Echo & Data</button>
-                    <p class="privacy-note info-message" role="note">Deleting your account severs your direct connection, but your eternal echo (note) remains in the archives as a testament to your spirit. Contact cosmic administrators for full data removal.</p>
-                </div>
+                    <button id="export-data-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">Download My Echo & Data</button>
+                    <p class="privacy-note text-sm text-gray-400 bg-gray-700 p-3 rounded-md mt-4" role="note">Deleting your account severs your direct connection, but your eternal echo (note) remains in the archives as a testament to your spirit. Contact cosmic administrators for full data removal.</p>
+                </div class="auth-actions">
             </section>
 
-            <section id="note-submission-section" class="card fade-in" aria-labelledby="note-submission-heading" style="display:none;">
-                <h2 id="note-submission-heading">The Unalterable Mark</h2>
-                <p class="info-message">Once released, your words become a permanent echo in the cosmos. This act can only be performed once per traveler.</p>
-                <p class="status-message warning-message" id="email-verification-message" style="display:none;">
-                    Your cosmic vessel (email) needs validation. A verification link has been dispatched to your email address. Please verify to release your echo.
-                </p>
-                <textarea id="final-words-input" placeholder="What final, eternal words does your spirit impart? (Max 500 characters)" rows="10" maxlength="500" aria-label="Enter your final words here"></textarea>
-                <p class="char-counter"><span id="char-count">0</span>/500 characters</p>
+            <section id="note-submission-section" class="content-section" style="display:none;">
+                <h2 class="text-3xl font-bold text-teal-300 mb-6 font-cinzel">The Unalterable Mark</h2>
+                <p class="info-message text-gray-400 mb-4 leading-relaxed">Once released, your words become a permanent echo in the cosmos. This act can only be performed once per traveler.</p>
+                <textarea id="final-words-input" placeholder="What final, eternal words does your spirit impart? (Max 500 characters)" rows="10" maxlength="500" aria-label="Enter your final words here" class="w-full p-4 rounded-md bg-gray-700 border border-gray-600 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                <p class="char-counter text-right text-sm text-gray-400 mt-2"><span id="char-count">0</span>/500 characters</p>
 
-                <div class="form-group-inline">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 mb-6">
                     <label for="mood-select" class="sr-only">Select the mood of your echo</label>
-                    <select id="mood-select" aria-label="Select the mood of your echo">
+                    <select id="mood-select" aria-label="Select the mood of your echo" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500">
                         <option value="">— Choose Echo's Mood —</option>
                         <option value="Serene">Serene</option>
                         <option value="Turbulent">Turbulent</option>
@@ -81,7 +98,7 @@
                     </select>
 
                     <label for="origin-select" class="sr-only">Select the origin of your echo</label>
-                    <select id="origin-select" aria-label="Select the origin of your echo">
+                    <select id="origin-select" aria-label="Select the origin of your echo" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500">
                         <option value="">— Choose Echo's Origin —</option>
                         <option value="Depths of Memory">Depths of Memory</option>
                         <option value="Fleeting Thought">Fleeting Thought</option>
@@ -92,84 +109,82 @@
                     </select>
                 </div>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="permanent-echo-consent" aria-required="true" aria-label="I understand and agree that my echo will be permanent and unchangeable.">
-                    <label for="permanent-echo-consent">I understand and agree that my echo will be permanent and unchangeable.</label>
+                <div class="flex items-center mb-6">
+                    <input type="checkbox" id="permanent-echo-consent" aria-required="true" aria-label="I understand and agree that my echo will be permanent and unchangeable." class="form-checkbox h-5 w-5 text-teal-500 rounded border-gray-600 focus:ring-teal-500 bg-gray-700">
+                    <label for="permanent-echo-consent" class="ml-2 text-gray-300 text-sm">I understand and agree that my echo will be permanent and unchangeable.</label>
                 </div>
 
-                <button id="submit-note-btn" class="primary-btn" aria-label="Release My Echo">Release My Echo</button>
-                <p id="submission-status" class="status-message" aria-live="polite"></p>
+                <button id="submit-note-btn" class="w-full primary-btn bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75">Release My Echo</button>
+                <p id="submission-status" class="status-message text-sm p-3 rounded-md mt-4" aria-live="polite"></p>
             </section>
 
-            <section id="notes-display-section" class="card fade-in" aria-labelledby="notes-display-heading">
-                <h2 id="notes-display-heading">Echoes Across the Cosmos</h2>
-                <div class="notes-actions">
-                    <button id="random-note-btn" class="secondary-btn" aria-label="Glimpse a Fading Whisper">Glimpse a Fading Whisper</button>
-                    <button id="random-journey-btn" class="secondary-btn" aria-label="Begin a Random Echo Journey">Begin a Random Echo Journey</button>
+            <section id="notes-display-section" class="content-section">
+                <h2 class="text-3xl font-bold text-teal-300 mb-6 font-cinzel">Echoes Across the Cosmos</h2>
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <button id="random-note-btn" class="flex-1 secondary-btn bg-gray-600 hover:bg-gray-700 text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75">Glimpse a Fading Whisper</button>
+                    <button id="random-journey-btn" class="flex-1 secondary-btn bg-gray-600 hover:bg-gray-700 text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75">Begin a Random Echo Journey</button>
                 </div>
-                <div id="notes-list" aria-live="polite">
-                    <p id="no-notes-message" class="info-message">The cosmic archives are stirring, summoning echoes...</p>
+                <div id="notes-list" class="space-y-6" aria-live="polite">
+                    <p id="no-notes-message" class="info-message text-gray-400 text-center p-4 bg-gray-700 rounded-md">The cosmic archives are stirring, summoning echoes...</p>
                     </div>
-                <button id="load-more-btn" class="secondary-btn" style="display:none;" aria-label="Summon More Echoes">Summon More Echoes</button>
+                <button id="load-more-btn" class="w-full mt-6 secondary-btn bg-gray-600 hover:bg-gray-700 text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75" style="display:none;" aria-label="Summon More Echoes">Summon More Echoes</button>
             </section>
-        </div>
 
-        <div id="single-note-view" style="display:none;">
-            <section class="card fade-in" aria-labelledby="single-note-heading">
-                <h2 id="single-note-heading">An Echo Unearthed</h2>
-                <div id="single-note-content">
-                    <p id="single-note-text" aria-live="polite"></p>
-                    <div id="single-note-details" class="note-details"></div>
-                    <div id="single-note-author" class="note-author"></div>
+            <section id="single-note-view" class="content-section" style="display:none;">
+                <h2 class="text-3xl font-bold text-teal-300 mb-6 font-cinzel">An Echo Unearthed</h2>
+                <div class="bg-gray-700 border border-gray-600 rounded-lg p-6 shadow-md mb-6">
+                    <p id="single-note-text" class="text-lg text-gray-200 mb-4 leading-relaxed" aria-live="polite"></p>
+                    <div id="single-note-details" class="text-sm text-gray-400 italic mb-2"></div>
+                    <div id="single-note-author" class="text-xs text-gray-500 text-right"></div>
                 </div>
-                <button id="back-to-all-notes-btn" class="secondary-btn" aria-label="Return to the Chorus of Echoes">Return to the Chorus of Echoes</button>
-                <p id="single-note-status" class="status-message" aria-live="polite"></p>
+                <button id="back-to-all-notes-btn" class="w-full secondary-btn bg-gray-600 hover:bg-gray-700 text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75" aria-label="Return to the Chorus of Echoes">Return to the Chorus of Echoes</button>
+                <p id="single-note-status" class="status-message text-sm p-3 rounded-md mt-4" aria-live="polite"></p>
             </section>
-        </div>
+        </main>
+    </div>
 
-        <div id="cookie-consent-banner" class="cookie-banner" role="complementary" aria-live="assertive" style="display:none;">
-            <p>This cosmic journey uses essential cookies for authentication to ensure your echoes are securely kept. By continuing, you affirm your acceptance of their use and our <a href="#privacy-info" class="link-style" aria-label="Read our Privacy Information">privacy information</a>.</p>
-            <button id="accept-cookies-btn" class="primary-btn" aria-label="Accept Cookies and Proceed">Accept & Proceed</button>
-        </div>
+    <div id="cookie-consent-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-4 flex flex-col md:flex-row items-center justify-between text-sm text-gray-300 z-40 shadow-xl" role="complementary" aria-live="assertive" style="display:none;">
+        <p class="mb-3 md:mb-0 md:mr-4 text-center md:text-left leading-relaxed">This cosmic journey uses essential cookies for authentication to ensure your echoes are securely kept. By continuing, you affirm your acceptance of their use and our <a href="#privacy-info" class="text-blue-400 hover:text-blue-300 transition-colors duration-200" aria-label="Read our Privacy Information">privacy information</a>.</p>
+        <button id="accept-cookies-btn" class="primary-btn bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75 flex-shrink-0">Accept & Proceed</button>
+    </div>
 
-        <footer id="privacy-info" class="card privacy-section fade-in" role="contentinfo">
-            <h2>Cosmic Data Protocols (Privacy & Security)</h2>
-            <p>At The Final Echoes, we are committed to safeguarding your journey through the cosmos. Your privacy is paramount.</p>
+    <footer id="privacy-info" class="bg-gray-800 border-t border-gray-700 text-gray-400 py-10 px-4 md:px-8 lg:px-12 mt-auto">
+        <div class="max-w-screen-xl mx-auto">
+            <h2 class="text-3xl font-bold text-teal-300 mb-6 font-cinzel">Cosmic Data Protocols (Privacy & Security)</h2>
+            <p class="mb-4 leading-relaxed">At The Final Echoes, we are committed to safeguarding your journey through the cosmos. Your privacy is paramount.</p>
 
-            <h3>What Data We Collect:</h3>
-            <ul>
-                <li>**Authentication Data:** We collect your email address and a securely hashed password to create and manage your unique account (your "cosmic vessel"). This allows you to submit your singular echo.</li>
-                <li>**Your Echo (Note):** The text you submit as your "final words."</li>
-                <li>**Metadata:** A server-generated timestamp, an anonymized version of your email for display, and optional mood/origin tags you choose.</li>
+            <h3 class="text-xl font-semibold text-teal-200 mb-3">What Data We Collect:</h3>
+            <ul class="list-disc list-inside space-y-2 mb-6">
+                <li><strong class="text-gray-300">Authentication Data:</strong> We collect your email address and a securely hashed password to create and manage your unique account (your "cosmic vessel"). This allows you to submit your singular echo.</li>
+                <li><strong class="text-gray-300">Your Echo (Note):</strong> The text you submit as your "final words."</li>
+                <li><strong class="text-gray-300">Metadata:</strong> A server-generated timestamp, an anonymized version of your email for display, and optional mood/origin tags you choose.</li>
             </ul>
 
-            <h3>How We Use Your Data:</h3>
-            <ul>
+            <h3 class="text-xl font-semibold text-teal-200 mb-3">How We Use Your Data:</h3>
+            <ul class="list-disc list-inside space-y-2 mb-6">
                 <li>To authenticate your identity and secure your submission.</li>
                 <li>To display your "final words" publicly within the "Echoes Across the Cosmos" archive.</li>
                 <li>To facilitate features like "Download My Echo & Data" for your right to access.</li>
             </ul>
 
-            <h3>Your Rights (GDPR Compliant):</h3>
-            <ul>
-                <li>**Right to Access/Portability:** You can <button type="button" class="link-style" onclick="document.getElementById('export-data-btn').click();">download your echo and account data</button> at any time from your account management section.</li>
-                <li>**Right to Rectification:** Your submitted echo is a permanent, unalterable mark. Due to its nature as a "final word," it cannot be changed once released. Your authentication email can be updated through Firebase directly if needed.</li>
-                <li>**Right to Erasure ("Right to be Forgotten"):** You can "Silence Your Own Echo" by deleting your account. This removes your login credentials. However, your public echo (the note itself) remains enshrined in the archives as an unalterable testament. For complete data removal of your echo from the public archives, please contact the cosmic administrators at [Your Contact Email/Method Here].</li>
-                <li>**Right to Restrict Processing & Object:** Given the simple, public nature of the echo, processing is minimal. If you object, your remedy is to delete your account.</li>
+            <h3 class="text-xl font-semibold text-teal-200 mb-3">Your Rights (GDPR Compliant):</h3>
+            <ul class="list-disc list-inside space-y-2 mb-6">
+                <li><strong class="text-gray-300">Right to Access/Portability:</strong> You can <button type="button" class="text-blue-400 hover:text-blue-300 transition-colors duration-200 underline" onclick="document.getElementById('export-data-btn').click();">download your echo and account data</button> at any time from your account management section.</li>
+                <li><strong class="text-gray-300">Right to Rectification:</strong> Your submitted echo is a permanent, unalterable mark. Due to its nature as a "final word," it cannot be changed once released. Your authentication email can be updated through Firebase directly if needed.</li>
+                <li><strong class="text-gray-300">Right to Erasure ("Right to be Forgotten"):</strong> You can "Silence Your Own Echo" by deleting your account. This removes your login credentials. However, your public echo (the note itself) remains enshrined in the archives as an unalterable testament. For complete data removal of your echo from the public archives, please contact the cosmic administrators at <a href="mailto:your_contact@example.com" class="text-blue-400 hover:text-blue-300 transition-colors duration-200">your_contact@example.com</a>.</li>
+                <li><strong class="text-gray-300">Right to Restrict Processing & Object:</strong> Given the simple, public nature of the echo, processing is minimal. If you object, your remedy is to delete your account.</li>
             </ul>
 
-            <h3>Security Measures:</h3>
-            <ul>
+            <h3 class="text-xl font-semibold text-teal-200 mb-3">Security Measures:</h3>
+            <ul class="list-disc list-inside space-y-2 mb-6">
                 <li>We utilize Firebase Authentication for robust user management, including industry-standard password hashing and protection against brute-force attacks.</li>
-                <li></li>
                 <li>Your submitted echo is sanitized using DOMPurify to prevent malicious code injection (XSS attacks).</li>
                 <li>Firestore Security Rules strictly control data access and ensure the "one-time, unalterable" nature of your echo.</li>
             </ul>
 
-            <p class="legal-note">By using this service, you acknowledge and agree to these terms. Data is processed in accordance with the laws of [Your Jurisdiction, e.g., Germany / European Union].</p>
-        </footer>
-
-    </div>
+            <p class="legal-note text-sm text-gray-500 italic mt-8">By using this service, you acknowledge and agree to these terms. Data is processed in accordance with the laws of Germany / European Union.</p>
+        </div>
+    </footer>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
